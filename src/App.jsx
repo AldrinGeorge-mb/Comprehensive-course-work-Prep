@@ -4,81 +4,63 @@ import QuizEngine from './components/QuizEngine';
 import ResultsView from './components/ResultsView';
 import ReviewView from './components/ReviewView';
 
-function App() {
-  const [currentView, setCurrentView] = useState('dashboard'); // dashboard, quiz, results, review
-  const [currentSubject, setCurrentSubject] = useState(null);
-  const [isMixedExam, setIsMixedExam] = useState(false);
-  const [totalQ, setTotalQ] = useState(50);
-  
-  // Shared state for the quiz
+export default function App() {
+  const [view, setView]               = useState('dashboard');
+  const [subject, setSubject]         = useState(null);
+  const [totalQ, setTotalQ]           = useState(50);
+  const [isMixed, setIsMixed]         = useState(false);
   const [userAnswers, setUserAnswers] = useState([]);
-  const [mistakes, setMistakes] = useState([]);
+  const [mistakes, setMistakes]       = useState([]);
 
-  const goHome = () => setCurrentView('dashboard');
-  
-  const startQuiz = (subject, numQ, isMixed = false) => {
-    setCurrentSubject(subject);
+  const goHome = () => setView('dashboard');
+
+  const startQuiz = (subj, numQ, mixed = false) => {
+    setSubject(subj);
     setTotalQ(numQ);
-    setIsMixedExam(isMixed);
+    setIsMixed(mixed);
     setUserAnswers([]);
     setMistakes([]);
-    setCurrentView('quiz');
+    setView('quiz');
   };
 
-  const showResults = (answers, missed) => {
+  const onComplete = (answers, errs) => {
     setUserAnswers(answers);
-    setMistakes(missed);
-    setCurrentView('results');
-  };
-
-  const startReview = () => {
-    setCurrentView('review');
+    setMistakes(errs);
+    setView('results');
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-5 relative z-10">
-      {currentView === 'dashboard' && (
-        <Dashboard 
-          startQuiz={startQuiz} 
-          startReview={startReview}
-        />
-      )}
-      
-      {currentView === 'quiz' && (
-        <QuizEngine 
-          subject={currentSubject}
-          totalQ={totalQ}
-          isMixedExam={isMixedExam}
-          goHome={goHome}
-          onComplete={showResults}
-        />
-      )}
-      
-      {currentView === 'results' && (
-        <ResultsView 
-          subject={currentSubject}
-          totalQ={totalQ}
-          userAnswers={userAnswers}
-          mistakes={mistakes}
-          goHome={goHome}
-        />
-      )}
-      
-      {currentView === 'review' && (
-        <ReviewView 
-          goHome={goHome} 
-        />
-      )}
+    <>
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 20px 60px', position: 'relative', zIndex: 1 }}>
 
-      {/* Hidden AG Logo */}
-      <div 
-        className="fixed bottom-3 right-3 text-xs font-black tracking-[0.15em] text-white/5 z-[2] cursor-default transition-all duration-700 select-none font-mono hover:text-indigo-500/70 hover:tracking-[0.35em] hover:scale-110 hover:shadow-glow"
-        title=""
-      >
-        AG
+        {view === 'dashboard' && (
+          <Dashboard startQuiz={startQuiz} startReview={() => setView('review')} />
+        )}
+        {view === 'quiz' && (
+          <QuizEngine
+            subject={subject}
+            totalQ={totalQ}
+            isMixedExam={isMixed}
+            goHome={goHome}
+            onComplete={onComplete}
+          />
+        )}
+        {view === 'results' && (
+          <ResultsView
+            subject={subject}
+            totalQ={totalQ}
+            userAnswers={userAnswers}
+            mistakes={mistakes}
+            goHome={goHome}
+          />
+        )}
+        {view === 'review' && (
+          <ReviewView goHome={goHome} />
+        )}
       </div>
-    </div>
+
+      {/* AG signature */}
+      <div className="ag-logo" title="">AG</div>
+    </>
   );
 }
-
-export default App;

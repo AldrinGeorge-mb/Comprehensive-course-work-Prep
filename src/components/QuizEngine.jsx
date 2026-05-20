@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// Shuffle array keeping track of original indices
 function shuffleArray(arr) {
   const a = arr.map((v, i) => ({ v, i }));
   for (let i = a.length - 1; i > 0; i--) {
@@ -11,16 +10,15 @@ function shuffleArray(arr) {
 }
 
 export default function QuizEngine({ subject, totalQ, isMixedExam, goHome, onComplete }) {
-  const [currentQ, setCurrentQ]         = useState(0);
-  const [selectedOpt, setSelectedOpt]   = useState(-1);   // index into shuffledOptions
-  const [isLocked, setIsLocked]         = useState(false);
+  const [currentQ, setCurrentQ]               = useState(0);
+  const [selectedOpt, setSelectedOpt]         = useState(-1);
+  const [isLocked, setIsLocked]               = useState(false);
   const [shuffledOptions, setShuffledOptions] = useState([]);
-  const [userAnswers, setUserAnswers]   = useState([]);
-  const [mistakes, setMistakes]         = useState([]);
-  const [diagramModal, setDiagramModal] = useState(null);
-  const [animKey, setAnimKey]           = useState(0);     // forces re-mount animation
+  const [userAnswers, setUserAnswers]         = useState([]);
+  const [mistakes, setMistakes]               = useState([]);
+  const [diagramModal, setDiagramModal]       = useState(null);
+  const [animKey, setAnimKey]                 = useState(0);
 
-  // Reinit on question change
   useEffect(() => {
     if (subject?.questions?.[currentQ]) {
       setShuffledOptions(shuffleArray(subject.questions[currentQ].options));
@@ -33,160 +31,176 @@ export default function QuizEngine({ subject, totalQ, isMixedExam, goHome, onCom
   if (!subject?.questions?.[currentQ]) return null;
 
   const q       = subject.questions[currentQ];
-  const pct     = ((currentQ) / totalQ) * 100;
+  const pct     = (currentQ / totalQ) * 100;
   const letters = ['A', 'B', 'C', 'D'];
   const isLast  = currentQ === totalQ - 1;
 
-  // ── Lock Answer ──────────────────────────────────
+  /* ── Lock Answer ── */
   const lockAnswer = () => {
     if (selectedOpt === -1 || isLocked) return;
     setIsLocked(true);
+    const correctIdx = q.ans;
+    const userIdx    = shuffledOptions[selectedOpt].i;
+    const correct    = userIdx === correctIdx;
 
-    const correctOrigIdx = q.ans;
-    const userOrigIdx    = shuffledOptions[selectedOpt].i;
-    const isCorrect      = userOrigIdx === correctOrigIdx;
+    const newAnswers = [...userAnswers, { qIdx: currentQ, userAns: userIdx, correct }];
+    setUserAnswers(newAnswers);
 
-    const newAnswer = { qIdx: currentQ, userAns: userOrigIdx, correct: isCorrect };
-    const newUserAnswers = [...userAnswers, newAnswer];
-    setUserAnswers(newUserAnswers);
-
-    if (!isCorrect) {
+    if (!correct) {
       setMistakes(prev => [...prev, {
         q:          q.q,
-        yourAns:    q.options[userOrigIdx],
-        correctAns: q.options[correctOrigIdx],
+        yourAns:    q.options[userIdx],
+        correctAns: q.options[correctIdx],
         exp:        q.exp,
       }]);
     }
   };
 
-  // ── Next / Finish ─────────────────────────────────
+  /* ── Next / Finish ── */
   const goNext = () => {
     if (!isLocked) return;
     if (!isLast) {
       setCurrentQ(c => c + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // use the local newUserAnswers computed in lockAnswer
-      // since state updates are async we pass through a callback approach
-      setUserAnswers(prev => {
-        onComplete(prev, mistakes);
-        return prev;
-      });
+      setUserAnswers(prev => { onComplete(prev, mistakes); return prev; });
     }
   };
 
-  // Unified action button handler
-  const handleAction = () => {
-    if (!isLocked) lockAnswer();
-    else           goNext();
-  };
+  const handleAction = () => !isLocked ? lockAnswer() : goNext();
 
-  // Build per-option class names (plain CSS classes, no dynamic Tailwind purge issues)
-  const getOptClass = (o, i) => {
-    const classes = ['option-btn'];
+  /* ── Option classes ── */
+  const optClass = (o, i) => {
+    const c = ['opt-btn'];
     if (isLocked) {
-      classes.push('opt-locked');
-      if (o.i === q.ans)                         classes.push('opt-correct');
-      else if (i === selectedOpt)                classes.push('opt-wrong');
+      c.push('opt-locked');
+      if (o.i === q.ans)       c.push('opt-correct');
+      else if (i === selectedOpt) c.push('opt-wrong');
     } else {
-      if (i === selectedOpt)                     classes.push('opt-selected');
+      if (i === selectedOpt)   c.push('opt-selected');
     }
-    return classes.join(' ');
+    return c.join(' ');
   };
 
-  const getLetterClass = (o, i) => {
-    const base = 'opt-letter';
-    if (!isLocked) return i === selectedOpt ? `${base} !bg-indigo-500 !text-white` : base;
-    if (o.i === q.ans)      return `${base} !bg-emerald-500 !text-white`;
-    if (i === selectedOpt)  return `${base} !bg-rose-500 !text-white`;
-    return base;
+  const letterClass = (o, i) => {
+    if (!isLocked) return i === selectedOpt ? 'opt-letter' : 'opt-letter';
+    if (o.i === q.ans)      return 'opt-letter';
+    if (i === selectedOpt)  return 'opt-letter';
+    return 'opt-letter';
   };
+
+  // Subject accent color
+  const accentColor = isMixedExam && q._subjectColor ? q._subjectColor : (subject.color || '#6366f1');
+  const correctCount = userAnswers.filter(a => a.correct).length;
 
   return (
-    <div id="quiz-view">
-      {/* ── Header ── */}
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <button className="btn-back" onClick={goHome}>← Back</button>
-        <span
-          className="text-base font-bold text-gradient truncate max-w-[55%]"
-          title={subject.name}
-        >
-          {isMixedExam ? '📝 Mixed Exam Mode' : subject.name}
-        </span>
+    <div style={{ paddingTop: 32, paddingBottom: 20 }}>
+
+      {/* ── Top bar ── */}
+      <div className="anim-in" style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:28, gap:12, flexWrap:'wrap' }}>
+        <button className="btn btn-ghost" onClick={goHome}>← Back</button>
+
+        {/* Live score pill */}
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+          {currentQ > 0 && (
+            <span style={{
+              padding:'5px 14px', borderRadius:999,
+              background:'rgba(16,185,129,0.10)', border:'1px solid rgba(16,185,129,0.22)',
+              color:'#6ee7b7', fontSize:'0.73rem', fontWeight:700,
+            }}>
+              ✓ {correctCount} / {currentQ}
+            </span>
+          )}
+          <span style={{
+            fontWeight:800, fontSize:'0.9rem',
+            background:`linear-gradient(135deg, ${accentColor}, #8b5cf6)`,
+            WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
+            maxWidth:200, overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis',
+          }}>
+            {isMixedExam ? '📝 Mixed Exam' : subject.name}
+          </span>
+        </div>
       </div>
 
       {/* ── Progress ── */}
-      <div className="progress-track mb-2">
-        <div className="progress-fill" style={{ width: `${pct}%` }} />
-      </div>
-      <div className="text-xs text-right mb-5" style={{ color: '#64748b' }}>
-        Question {currentQ + 1} / {totalQ}
+      <div className="anim-in" style={{ marginBottom:28 }}>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline', marginBottom:10 }}>
+          <span className="t-label">Progress</span>
+          <span className="t-mono" style={{ fontSize:'0.78rem', color:'#64748b' }}>
+            {currentQ + 1} <span style={{ color:'#2d3748' }}>/ {totalQ}</span>
+          </span>
+        </div>
+        <div className="progress-track">
+          <div className="progress-fill" style={{ width:`${pct}%` }}/>
+        </div>
       </div>
 
       {/* ── Question Card ── */}
-      <div key={animKey} className="glass-card p-6 md:p-8 mb-5 anim-fade-up">
-        {/* Q Number + subject tag */}
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-[0.68rem] uppercase tracking-[0.14em] font-semibold" style={{ color: '#8b5cf6' }}>
-            Question {currentQ + 1}
+      <div key={animKey} className="card-flat anim-up" style={{ padding:'28px 26px', marginBottom:16, border:'1px solid rgba(255,255,255,0.06)' }}>
+
+        {/* Question meta row */}
+        <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:20 }}>
+          {/* Large question number */}
+          <span className="t-mono" style={{
+            fontSize:'0.7rem', fontWeight:700, color:'rgba(255,255,255,0.12)',
+            padding:'4px 10px', borderRadius:8, background:'rgba(255,255,255,0.03)',
+            border:'1px solid rgba(255,255,255,0.06)',
+          }}>
+            Q{String(currentQ + 1).padStart(2,'0')}
           </span>
+
           {isMixedExam && q._subjectTag && (
-            <span
-              className="text-[0.6rem] px-2 py-0.5 rounded-md font-bold uppercase tracking-wider"
-              style={{ background: `${q._subjectColor}20`, color: q._subjectColor }}
-            >
+            <span style={{
+              fontSize:'0.6rem', padding:'3px 9px', borderRadius:7,
+              background:`${q._subjectColor}18`, color:q._subjectColor,
+              fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em',
+              border:`1px solid ${q._subjectColor}28`,
+            }}>
               {q._subjectTag}
             </span>
           )}
         </div>
 
-        {/* Question text — supports HTML (for <br> tags in original data) */}
+        {/* Question text */}
         <div
-          className="text-base md:text-lg font-medium leading-[1.75] mb-5"
-          style={{ color: '#f1f5f9' }}
+          style={{ fontSize:'1.05rem', fontWeight:500, lineHeight:1.8, color:'#eef2ff', marginBottom:22 }}
           dangerouslySetInnerHTML={{ __html: q.q }}
         />
 
         {/* Diagram */}
         {q.img && (
-          <div className="mb-5">
+          <div style={{ marginBottom:22 }}>
             <img
               src={q.img}
               alt="Question diagram"
               onClick={() => setDiagramModal(q.img)}
-              className="max-w-full h-auto rounded-xl cursor-zoom-in block"
               style={{
-                border: '1px solid rgba(255,255,255,0.1)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                maxWidth:'100%', height:'auto', borderRadius:12, display:'block',
+                border:'1px solid rgba(255,255,255,0.08)',
+                boxShadow:'0 8px 40px rgba(0,0,0,0.4)',
+                cursor:'zoom-in',
+                transition:'transform 0.3s ease, box-shadow 0.3s ease',
               }}
-              onMouseEnter={e => {
-                e.target.style.transform = 'scale(1.02)';
-                e.target.style.boxShadow = '0 12px 40px rgba(99,102,241,0.25)';
-              }}
-              onMouseLeave={e => {
-                e.target.style.transform = '';
-                e.target.style.boxShadow = '0 8px 32px rgba(0,0,0,0.35)';
-              }}
+              onMouseEnter={e => { e.target.style.transform='scale(1.015)'; e.target.style.boxShadow='0 12px 50px rgba(99,102,241,0.25)'; }}
+              onMouseLeave={e => { e.target.style.transform=''; e.target.style.boxShadow='0 8px 40px rgba(0,0,0,0.4)'; }}
             />
-            <p className="text-center text-xs mt-2 italic" style={{ color: '#64748b' }}>
-              📎 Reference diagram — click to enlarge
+            <p style={{ color:'#2d3748', fontSize:'0.7rem', marginTop:8, textAlign:'center', fontStyle:'italic' }}>
+              📎 Click diagram to enlarge
             </p>
           </div>
         )}
 
-        {/* Options */}
-        <div className="flex flex-col gap-2.5">
+        {/* ── Options ── */}
+        <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
           {shuffledOptions.map((o, i) => (
             <button
               key={i}
-              className={getOptClass(o, i)}
+              className={optClass(o, i)}
               onClick={() => { if (!isLocked) setSelectedOpt(i); }}
             >
-              <span className={getLetterClass(o, i)}>{letters[i]}</span>
+              <span className="opt-letter">{letters[i]}</span>
               <span
-                className="pt-0.5 leading-relaxed text-left flex-1"
+                style={{ paddingTop:2, lineHeight:1.6, textAlign:'left', flex:1 }}
                 dangerouslySetInnerHTML={{ __html: o.v }}
               />
             </button>
@@ -196,45 +210,39 @@ export default function QuizEngine({ subject, totalQ, isMixedExam, goHome, onCom
 
       {/* ── Explanation ── */}
       {isLocked && (
-        <div className="explanation-box anim-fade-up mb-4">
-          <span style={{ color: '#6366f1', fontWeight: 700 }}>Explanation: </span>
-          <span dangerouslySetInnerHTML={{ __html: q.exp }} />
+        <div className="exp-box anim-up" style={{ marginBottom:16 }}>
+          <span style={{ color:'#818cf8', fontWeight:800, marginRight:6 }}>Explanation:</span>
+          <span dangerouslySetInnerHTML={{ __html: q.exp }}/>
         </div>
       )}
 
       {/* ── Action Button ── */}
-      {!isLocked ? (
-        <button
-          className="btn-primary"
-          disabled={selectedOpt === -1}
-          onClick={handleAction}
-        >
-          🔒 Lock Answer
-        </button>
-      ) : (
-        <button className="btn-success" onClick={handleAction}>
-          {isLast ? '🏆 View Results' : 'Next Question →'}
-        </button>
-      )}
+      <div className="anim-in">
+        {!isLocked ? (
+          <button className="btn btn-lock" disabled={selectedOpt === -1} onClick={handleAction}>
+            🔒  Lock Answer
+          </button>
+        ) : (
+          <button className="btn btn-next" onClick={handleAction}>
+            {isLast ? '🏆  View Results' : 'Next Question  →'}
+          </button>
+        )}
+      </div>
 
       {/* ── Diagram Modal ── */}
       {diagramModal && (
         <div
-          className="anim-fade-in"
+          className="anim-in"
           style={{
-            position: 'fixed', inset: 0,
-            background: 'rgba(0,0,0,0.92)',
-            zIndex: 1000,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'zoom-out',
-            padding: '20px',
+            position:'fixed', inset:0, background:'rgba(0,0,0,0.94)',
+            zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center',
+            cursor:'zoom-out', padding:20,
           }}
           onClick={() => setDiagramModal(null)}
         >
           <img
-            src={diagramModal}
-            alt="Enlarged diagram"
-            style={{ maxWidth: '95vw', maxHeight: '95vh', borderRadius: '14px', boxShadow: '0 0 80px rgba(99,102,241,0.35)' }}
+            src={diagramModal} alt="Enlarged diagram"
+            style={{ maxWidth:'95vw', maxHeight:'95vh', borderRadius:16, boxShadow:'0 0 100px rgba(99,102,241,0.4)' }}
           />
         </div>
       )}

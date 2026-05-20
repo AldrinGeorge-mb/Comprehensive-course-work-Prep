@@ -1,132 +1,179 @@
 import React, { useEffect, useState, useRef } from 'react';
 
+const GRADES = [
+  { min:90, emoji:'🏆', label:'Outstanding',    color:'#fcd34d' },
+  { min:70, emoji:'🎯', label:'Excellent',       color:'#10b981' },
+  { min:50, emoji:'📈', label:'Good Progress',   color:'#06b6d4' },
+  { min:30, emoji:'💪', label:'Keep Practising', color:'#f59e0b' },
+  { min:0,  emoji:'🔁', label:'Need More Work',  color:'#f43f5e' },
+];
+
 export default function ResultsView({ subject, totalQ, userAnswers, mistakes, goHome }) {
-  const score  = userAnswers.filter(a => a.correct).length;
-  const wrong  = totalQ - score;
-  const pct    = totalQ > 0 ? (score / totalQ) * 100 : 0;
-  const color  = pct >= 70 ? '#10b981' : pct >= 40 ? '#f59e0b' : '#f43f5e';
+  const score = userAnswers.filter(a => a.correct).length;
+  const wrong = totalQ - score;
+  const pct   = totalQ > 0 ? Math.round((score / totalQ) * 100) : 0;
+
+  const grade = GRADES.find(g => pct >= g.min);
+  const ringColor = grade.color;
 
   const [displayScore, setDisplayScore] = useState(0);
   const [ringDeg, setRingDeg]           = useState(0);
-  const intervalRef = useRef(null);
+  const tmr = useRef(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // Animate ring
-    const targetDeg = (pct / 100) * 360;
-    setTimeout(() => setRingDeg(targetDeg), 120);
-
-    // Animate counter
+    setTimeout(() => setRingDeg((pct / 100) * 360), 150);
     if (score === 0) return;
-    let count = 0;
-    intervalRef.current = setInterval(() => {
-      count++;
-      setDisplayScore(count);
-      if (count >= score) clearInterval(intervalRef.current);
-    }, Math.max(20, 600 / score));
-
-    return () => clearInterval(intervalRef.current);
+    let c = 0;
+    const step = Math.max(15, Math.floor(600 / score));
+    tmr.current = setInterval(() => {
+      c++;
+      setDisplayScore(c);
+      if (c >= score) clearInterval(tmr.current);
+    }, step);
+    return () => clearInterval(tmr.current);
   }, [score, pct]);
 
-  const emoji = pct >= 70 ? '🎉' : pct >= 40 ? '📈' : '💪';
-  const label = pct >= 70 ? 'Great work!' : pct >= 40 ? 'Keep going!' : 'Keep practicing!';
-
   return (
-    <div className="anim-fade-up">
+    <div style={{ paddingTop: 48, paddingBottom: 20 }}>
 
-      {/* Header */}
-      <div style={{ textAlign: 'center', padding: '36px 0 10px' }}>
-        <h1 className="text-gradient font-black" style={{ fontSize: 'clamp(1.4rem,3.5vw,2.2rem)', marginBottom: 6 }}>
+      {/* ── Subject name ── */}
+      <div className="anim-up" style={{ textAlign:'center', marginBottom:4 }}>
+        <p style={{ fontSize:'0.75rem', fontWeight:700, color:'#4a5568', textTransform:'uppercase', letterSpacing:'0.12em', marginBottom:10 }}>
+          Quiz Complete
+        </p>
+        <h1 style={{
+          fontSize:'clamp(1.3rem,3.5vw,2rem)', fontWeight:900, letterSpacing:'-0.02em',
+          background:'linear-gradient(135deg, #e0e7ff, #c4b5fd)',
+          WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text',
+        }}>
           {subject?.name}
         </h1>
-        <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Quiz Complete</p>
       </div>
 
-      {/* Score Ring */}
+      {/* ── Score Ring ── */}
       <div
-        className="score-ring"
-        style={{
-          '--ring-color': color,
-          '--ring-deg': `${ringDeg}deg`,
-        }}
+        className="score-ring anim-scale"
+        style={{ '--ring-color': ringColor, '--ring-deg': `${ringDeg}deg` }}
       >
-        <div style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1, color }}>{displayScore}</div>
-        <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 4 }}>out of {totalQ}</div>
+        {/* Inner glow */}
+        <div style={{
+          position:'absolute', inset:8, borderRadius:'50%',
+          background:`radial-gradient(circle, ${ringColor}12 0%, transparent 70%)`,
+        }}/>
+        <div style={{ position:'relative', textAlign:'center' }}>
+          <div className="t-mono" style={{ fontSize:'3.5rem', fontWeight:900, lineHeight:1, color: ringColor }}>
+            {displayScore}
+          </div>
+          <div style={{ fontSize:'0.78rem', color:'#4a5568', marginTop:4, fontWeight:600 }}>
+            out of {totalQ}
+          </div>
+        </div>
       </div>
 
-      {/* Grade label */}
-      <div style={{ textAlign: 'center', marginBottom: 20 }}>
-        <span style={{ fontSize: '1.1rem' }}>{emoji}</span>
-        <span style={{ fontSize: '0.9rem', color: '#94a3b8', marginLeft: 8 }}>{label}</span>
+      {/* ── Grade banner ── */}
+      <div className="anim-up delay-1" style={{ textAlign:'center', marginBottom:28 }}>
+        <div style={{ fontSize:'1.8rem', marginBottom:6 }}>{grade.emoji}</div>
+        <div style={{ fontWeight:800, fontSize:'1.1rem', color: grade.color }}>{grade.label}</div>
+        <div style={{ color:'#4a5568', fontSize:'0.82rem', marginTop:3 }}>{pct}% score</div>
       </div>
 
-      {/* Stats chips */}
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 24 }}>
-        <span style={{
-          padding: '8px 18px', borderRadius: 11, fontSize: '0.78rem', fontWeight: 700,
-          background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.22)', color: '#10b981',
+      {/* ── Stats row ── */}
+      <div className="anim-up delay-2" style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap', marginBottom:32 }}>
+        <div style={{
+          padding:'14px 24px', borderRadius:14, textAlign:'center',
+          background:'rgba(16,185,129,0.08)', border:'1px solid rgba(16,185,129,0.2)',
         }}>
-          ✓ {score} Correct
-        </span>
-        <span style={{
-          padding: '8px 18px', borderRadius: 11, fontSize: '0.78rem', fontWeight: 700,
-          background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.22)', color: '#f43f5e',
+          <div className="t-mono" style={{ fontSize:'1.8rem', fontWeight:900, color:'#10b981', lineHeight:1 }}>{score}</div>
+          <div style={{ fontSize:'0.67rem', fontWeight:700, color:'#4a5568', textTransform:'uppercase', letterSpacing:'0.1em', marginTop:5 }}>Correct</div>
+        </div>
+        <div style={{
+          padding:'14px 24px', borderRadius:14, textAlign:'center',
+          background:'rgba(244,63,94,0.08)', border:'1px solid rgba(244,63,94,0.2)',
         }}>
-          ✗ {wrong} Wrong
-        </span>
-        <span style={{
-          padding: '8px 18px', borderRadius: 11, fontSize: '0.78rem', fontWeight: 700,
-          background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.22)', color: '#f59e0b',
+          <div className="t-mono" style={{ fontSize:'1.8rem', fontWeight:900, color:'#f43f5e', lineHeight:1 }}>{wrong}</div>
+          <div style={{ fontSize:'0.67rem', fontWeight:700, color:'#4a5568', textTransform:'uppercase', letterSpacing:'0.1em', marginTop:5 }}>Wrong</div>
+        </div>
+        <div style={{
+          padding:'14px 24px', borderRadius:14, textAlign:'center',
+          background:'rgba(245,158,11,0.08)', border:'1px solid rgba(245,158,11,0.2)',
         }}>
-          📊 {Math.round(pct)}%
-        </span>
+          <div className="t-mono" style={{ fontSize:'1.8rem', fontWeight:900, color:'#f59e0b', lineHeight:1 }}>{pct}%</div>
+          <div style={{ fontSize:'0.67rem', fontWeight:700, color:'#4a5568', textTransform:'uppercase', letterSpacing:'0.1em', marginTop:5 }}>Accuracy</div>
+        </div>
       </div>
 
-      {/* Mistakes card */}
-      {mistakes.length > 0 && (
-        <div
-          className="glass-card"
-          style={{ padding: '26px 28px', marginBottom: 20 }}
-        >
-          <div style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: 18, display: 'flex', alignItems: 'center', gap: 8 }}>
-            📋 <span>Mistakes Review</span>
-            <span style={{ fontSize: '0.72rem', padding: '2px 10px', borderRadius: 8, background: 'rgba(244,63,94,0.12)', color: '#f43f5e', fontWeight: 600, marginLeft: 4 }}>
+      {/* ── Mistakes review ── */}
+      {mistakes.length > 0 ? (
+        <div className="card-flat anim-up delay-3" style={{ padding:'26px 28px', marginBottom:24 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:22 }}>
+            <span style={{ fontSize:'1.1rem' }}>📋</span>
+            <span style={{ fontWeight:800, fontSize:'1rem', color:'#e0e7ff' }}>Mistakes Review</span>
+            <span style={{
+              marginLeft:'auto', padding:'3px 10px', borderRadius:8,
+              background:'rgba(244,63,94,0.12)', color:'#fda4af',
+              fontSize:'0.68rem', fontWeight:800, border:'1px solid rgba(244,63,94,0.22)',
+            }}>
               {mistakes.length} wrong
             </span>
           </div>
+
           <div>
             {mistakes.map((m, i) => (
               <div
                 key={i}
                 style={{
-                  padding: '16px 0',
-                  borderBottom: i !== mistakes.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                  padding:'18px 0',
+                  borderBottom: i !== mistakes.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
                 }}
               >
+                {/* Question */}
                 <div
-                  style={{ fontSize: '0.88rem', fontWeight: 600, marginBottom: 10, color: '#f1f5f9', lineHeight: 1.55 }}
-                  dangerouslySetInnerHTML={{ __html: `${i + 1}. ${m.q}` }}
+                  style={{ fontSize:'0.875rem', fontWeight:600, color:'#e0e7ff', lineHeight:1.6, marginBottom:12 }}
+                  dangerouslySetInnerHTML={{ __html: `${i+1}. ${m.q}` }}
                 />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <span style={{ fontSize: '0.78rem', color: '#f43f5e' }}>✗ Your answer: {m.yourAns}</span>
-                  <span style={{ fontSize: '0.78rem', color: '#10b981' }}>✓ Correct: {m.correctAns}</span>
-                  <span style={{ fontSize: '0.76rem', color: '#64748b', fontStyle: 'italic', marginTop: 4 }}>{m.exp}</span>
+                {/* Answer comparison */}
+                <div style={{
+                  display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:10,
+                }}>
+                  <div style={{
+                    padding:'10px 14px', borderRadius:11,
+                    background:'rgba(244,63,94,0.08)', border:'1px solid rgba(244,63,94,0.2)',
+                  }}>
+                    <div style={{ fontSize:'0.6rem', fontWeight:700, color:'#f43f5e', textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:4 }}>Your Answer</div>
+                    <div style={{ fontSize:'0.82rem', color:'#fca5a5' }}>{m.yourAns}</div>
+                  </div>
+                  <div style={{
+                    padding:'10px 14px', borderRadius:11,
+                    background:'rgba(16,185,129,0.08)', border:'1px solid rgba(16,185,129,0.2)',
+                  }}>
+                    <div style={{ fontSize:'0.6rem', fontWeight:700, color:'#10b981', textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:4 }}>Correct Answer</div>
+                    <div style={{ fontSize:'0.82rem', color:'#6ee7b7' }}>{m.correctAns}</div>
+                  </div>
+                </div>
+                {/* Explanation */}
+                <div style={{
+                  padding:'10px 14px', borderRadius:10,
+                  background:'rgba(99,102,241,0.06)', border:'1px solid rgba(99,102,241,0.12)',
+                  fontSize:'0.78rem', color:'#a5b4fc', lineHeight:1.6,
+                }}>
+                  💡 {m.exp}
                 </div>
               </div>
             ))}
           </div>
         </div>
-      )}
-
-      {mistakes.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '20px', marginBottom: 20 }}>
-          <div style={{ fontSize: '2.5rem' }}>🎯</div>
-          <div style={{ color: '#10b981', fontWeight: 700, marginTop: 8 }}>Perfect Score! No mistakes.</div>
+      ) : (
+        <div className="anim-scale delay-3" style={{ textAlign:'center', padding:'32px', marginBottom:24 }}>
+          <div style={{ fontSize:'3rem', marginBottom:10 }}>🎯</div>
+          <div style={{ fontWeight:800, fontSize:'1.1rem', color:'#10b981' }}>Perfect Score!</div>
+          <div style={{ color:'#4a5568', fontSize:'0.85rem', marginTop:4 }}>You got every single question right.</div>
         </div>
       )}
 
-      <button className="btn-home" onClick={goHome}>← Return to Dashboard</button>
+      <button className="btn btn-home anim-up delay-4" onClick={goHome}>
+        ← Return to Dashboard
+      </button>
     </div>
   );
 }
