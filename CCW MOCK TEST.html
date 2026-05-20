@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KTU S6 CCW Master Dashboard</title>
+<meta name="description" content="Premium testing dashboard for KTU S6 Comprehensive Course Work exam preparation with 250 questions across 5 subjects.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg-primary:#0a0a1a;--bg-card:rgba(255,255,255,0.04);--bg-card-hover:rgba(255,255,255,0.08);
+--border-card:rgba(255,255,255,0.08);--border-glow:rgba(99,102,241,0.4);
+--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;
+--accent-indigo:#6366f1;--accent-violet:#8b5cf6;--accent-emerald:#10b981;
+--accent-rose:#f43f5e;--accent-amber:#f59e0b;
+--shadow-lg:0 20px 60px rgba(0,0,0,0.5);--shadow-glow:0 0 30px rgba(99,102,241,0.15);
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden;line-height:1.6}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(99,102,241,0.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(139,92,246,0.06) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(16,185,129,0.04) 0%,transparent 50%);pointer-events:none;z-index:0}
+.container{max-width:900px;margin:0 auto;padding:20px;position:relative;z-index:1}
+
+/* Header */
+.header{text-align:center;padding:40px 0 20px}
+.header h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;background:linear-gradient(135deg,#6366f1,#8b5cf6,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.02em}
+.header p{color:var(--text-secondary);font-size:0.95rem;margin-top:8px;font-weight:400}
+.badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.2);margin-top:12px}
+
+/* Subject Cards Grid */
+.subjects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:30px}
+.subject-card{background:var(--bg-card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border-card);border-radius:16px;padding:28px 24px;cursor:pointer;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
+.subject-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--card-accent,rgba(99,102,241,0.1)),transparent 60%);opacity:0;transition:opacity 0.4s}
+.subject-card:hover{transform:translateY(-4px);border-color:var(--border-glow);box-shadow:var(--shadow-glow)}
+.subject-card:hover::before{opacity:1}
+.subject-card:active{transform:translateY(-1px)}
+.card-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:16px;position:relative;z-index:1}
+.card-title{font-size:1.1rem;font-weight:700;margin-bottom:6px;position:relative;z-index:1}
+.card-desc{font-size:0.8rem;color:var(--text-muted);position:relative;z-index:1}
+.card-meta{display:flex;align-items:center;gap:8px;margin-top:14px;position:relative;z-index:1}
+.card-meta span{font-size:0.7rem;color:var(--text-secondary);background:rgba(255,255,255,0.05);padding:3px 10px;border-radius:8px}
+
+/* Quiz View */
+#quiz-view{display:none}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.back-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border-card);color:var(--text-secondary);padding:8px 16px;border-radius:10px;cursor:pointer;font-size:0.8rem;font-family:inherit;transition:all 0.3s;display:flex;align-items:center;gap:6px}
+.back-btn:hover{background:rgba(255,255,255,0.1);color:var(--text-primary)}
+.quiz-subject{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.progress-wrap{width:100%;background:rgba(255,255,255,0.06);border-radius:10px;height:6px;margin-bottom:8px;overflow:hidden}
+.progress-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,#6366f1,#8b5cf6);transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
+.progress-text{font-size:0.75rem;color:var(--text-muted);text-align:right;margin-bottom:20px}
+
+/* Question Card */
+.question-card{background:var(--bg-card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border-card);border-radius:16px;padding:32px 28px;margin-bottom:20px;animation:fadeSlideIn 0.4s ease}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.q-number{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent-violet);font-weight:600;margin-bottom:10px}
+.q-text{font-size:1.05rem;font-weight:500;line-height:1.7;color:var(--text-primary)}
+.question-diagram{max-width:100%;height:auto;border-radius:12px;margin-top:16px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 32px rgba(0,0,0,0.3);transition:transform 0.3s ease,box-shadow 0.3s ease;cursor:zoom-in;display:block}
+.question-diagram:hover{transform:scale(1.02);box-shadow:0 12px 40px rgba(99,102,241,0.2)}
+.diagram-label{font-size:0.7rem;color:var(--text-muted);margin-top:8px;text-align:center;font-style:italic;letter-spacing:0.05em}
+.diagram-modal{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;display:flex;align-items:center;justify-content:center;cursor:zoom-out;animation:fadeIn 0.3s ease;padding:20px}
+.diagram-modal img{max-width:95vw;max-height:95vh;border-radius:12px;box-shadow:0 0 60px rgba(99,102,241,0.3)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* Options */
+.options-list{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.option-btn{background:rgba(255,255,255,0.03);border:1.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 18px;cursor:pointer;text-align:left;font-size:0.9rem;font-family:inherit;color:var(--text-primary);transition:all 0.3s;display:flex;align-items:flex-start;gap:12px;position:relative}
+.option-btn:hover:not(.locked){background:rgba(99,102,241,0.06);border-color:rgba(99,102,241,0.25)}
+.option-btn.selected{border-color:var(--accent-indigo);background:rgba(99,102,241,0.08);box-shadow:0 0 20px rgba(99,102,241,0.1)}
+.option-btn.correct{border-color:var(--accent-emerald)!important;background:rgba(16,185,129,0.1)!important;box-shadow:0 0 20px rgba(16,185,129,0.15)}
+.option-btn.wrong{border-color:var(--accent-rose)!important;background:rgba(244,63,94,0.1)!important;box-shadow:0 0 20px rgba(244,63,94,0.15)}
+.option-btn.locked{cursor:default;pointer-events:none}
+.opt-letter{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;background:rgba(255,255,255,0.06);color:var(--text-muted);transition:all 0.3s}
+.option-btn.selected .opt-letter{background:var(--accent-indigo);color:#fff}
+.option-btn.correct .opt-letter{background:var(--accent-emerald);color:#fff}
+.option-btn.wrong .opt-letter{background:var(--accent-rose);color:#fff}
+.opt-text{padding-top:3px;line-height:1.5}
+
+/* Explanation */
+.explanation{margin-top:16px;padding:16px 20px;border-radius:12px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.12);font-size:0.85rem;color:#c7d2fe;line-height:1.6;animation:fadeSlideIn 0.4s ease}
+.explanation strong{color:var(--accent-indigo);font-weight:600}
+
+/* Action Button */
+.action-btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;transition:all 0.3s;margin-top:8px}
+.lock-btn{background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;box-shadow:0 4px 20px rgba(99,102,241,0.3)}
+.lock-btn:hover{box-shadow:0 6px 30px rgba(99,102,241,0.45);transform:translateY(-1px)}
+.lock-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+.next-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 20px rgba(16,185,129,0.3)}
+.next-btn:hover{box-shadow:0 6px 30px rgba(16,185,129,0.45);transform:translateY(-1px)}
+
+/* Results View */
+#results-view{display:none}
+.score-circle{width:180px;height:180px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:30px auto;position:relative}
+.score-circle::before{content:'';position:absolute;inset:-4px;border-radius:50%;padding:4px;background:conic-gradient(var(--score-color,#6366f1) var(--score-deg,0deg),rgba(255,255,255,0.06) 0);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.score-value{font-size:2.8rem;font-weight:800;line-height:1}
+.score-label{font-size:0.8rem;color:var(--text-muted);margin-top:4px}
+.results-card{background:var(--bg-card);backdrop-filter:blur(20px);border:1px solid var(--border-card);border-radius:16px;padding:28px;margin-top:20px}
+.results-title{font-size:1.1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.mistake-item{padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.mistake-item:last-child{border-bottom:none}
+.mistake-q{font-size:0.85rem;font-weight:500;margin-bottom:8px;color:var(--text-primary)}
+.mistake-detail{font-size:0.78rem;display:flex;flex-direction:column;gap:4px}
+.mistake-your{color:var(--accent-rose)}
+.mistake-correct{color:var(--accent-emerald)}
+.mistake-exp{color:var(--text-muted);font-style:italic;margin-top:4px}
+.home-btn{background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:0.9rem;font-weight:600;font-family:inherit;cursor:pointer;margin-top:24px;transition:all 0.3s;display:block;width:100%;box-shadow:0 4px 20px rgba(99,102,241,0.3)}
+.home-btn:hover{box-shadow:0 6px 30px rgba(99,102,241,0.45);transform:translateY(-1px)}
+.stats-row{display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.stat-chip{padding:8px 16px;border-radius:10px;font-size:0.78rem;font-weight:600;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)}
+.stat-chip.correct-chip{color:var(--accent-emerald);border-color:rgba(16,185,129,0.2)}
+.stat-chip.wrong-chip{color:var(--accent-rose);border-color:rgba(244,63,94,0.2)}
+
+/* Mixed Exam Card */
+.exam-card{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(244,63,94,0.06));backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(244,63,94,0.15);border-radius:16px;padding:28px 24px;cursor:pointer;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden;grid-column:1/-1;margin-top:8px}
+.exam-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(244,63,94,0.12),rgba(99,102,241,0.08),transparent 60%);opacity:0;transition:opacity 0.4s}
+.exam-card:hover{transform:translateY(-4px);border-color:rgba(244,63,94,0.4);box-shadow:0 0 30px rgba(244,63,94,0.15)}
+.exam-card:hover::before{opacity:1}
+.exam-card:active{transform:translateY(-1px)}
+.exam-card-inner{display:flex;align-items:center;gap:20px;position:relative;z-index:1}
+.exam-card-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;background:linear-gradient(135deg,rgba(244,63,94,0.2),rgba(99,102,241,0.2));flex-shrink:0}
+.exam-card-content{flex:1}
+.exam-card-title{font-size:1.15rem;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,#f43f5e,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.exam-card-desc{font-size:0.8rem;color:var(--text-muted)}
+.exam-card-tags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.exam-card-tags span{font-size:0.65rem;padding:3px 8px;border-radius:6px;font-weight:600;background:rgba(255,255,255,0.05);color:var(--text-secondary)}
+.exam-pulse{width:10px;height:10px;border-radius:50%;background:#f43f5e;position:relative;flex-shrink:0}
+.exam-pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(244,63,94,0.4);animation:pulse 2s infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:1}100%{transform:scale(2.2);opacity:0}}
+
+
+/* Review Mode */
+#review-view { display: none; }
+.review-q-card { background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+.review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.review-opt { padding: 8px 12px; border-radius: 8px; margin-top: 8px; background: rgba(255,255,255,0.03); font-size: 0.85rem; }
+.review-opt.correct { background: rgba(16,185,129,0.15); border: 1px solid var(--accent-emerald); color: #fff; }
+.review-exp { margin-top: 12px; font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
+
+/* Hidden AG Logo */
+.ag-logo{position:fixed;bottom:10px;right:12px;font-size:0.75rem;font-weight:900;letter-spacing:0.15em;color:rgba(255,255,255,0.04);z-index:2;cursor:default;transition:all 0.8s cubic-bezier(0.4,0,0.2,1);user-select:none;font-family:'Inter',monospace}
+.ag-logo:hover{color:rgba(99,102,241,0.7);text-shadow:0 0 20px rgba(99,102,241,0.5),0 0 40px rgba(139,92,246,0.3);letter-spacing:0.35em;transform:scale(1.15)}
+
+.mode-btns { display: flex; gap: 8px; margin-top: 18px; position: relative; z-index: 2; }
+.mode-btn { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 8px 0; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: inherit; text-align: center; }
+.mode-btn:hover { background: rgba(255,255,255,0.15); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+/* Subject tag on quiz */
+.q-subject-tag{display:inline-block;font-size:0.6rem;padding:2px 8px;border-radius:6px;font-weight:600;margin-left:8px;vertical-align:middle;text-transform:uppercase;letter-spacing:0.08em}
+
+@media(max-width:600px){.container{padding:14px}.question-card{padding:22px 18px}.subjects-grid{grid-template-columns:1fr}.exam-card-inner{flex-direction:column;text-align:center}.exam-card-tags{justify-content:center}}
+</style>
+</head>
+<body>
+<div class="container">
+<!-- DASHBOARD -->
+<div id="dashboard-view">
+<div class="header">
+<h1>KTU S6 CCW Master Dashboard</h1>
+
+<p>Comprehensive Course Work — Exam Preparation</p>
+<span class="badge">300 Questions • 5 Subjects</span>
+
+
+</div>
+<div class="subjects-grid"
+ id="subjects-grid"></div>
+</div>
+<div class="ag-logo" id="ag-logo" title="">AG</div>
+<!-- QUIZ -->
+<div id="quiz-view">
+<div class="quiz-header">
+<button class="back-btn" onclick="goHome()">← Back</button>
+<span class="quiz-subject" id="quiz-subject"></span>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+<div class="progress-text" id="progress-text"></div>
+<div class="question-card" id="question-card"></div>
+<div id="explanation-box"></div>
+<button class="action-btn lock-btn" id="action-btn" disabled onclick="handleAction()">Lock Answer</button>
+</div>
+
+<!-- REVIEW MODE -->
+<div id="review-view">
+  <div class="review-header">
+    <h2>Master Database Review</h2>
+    <button class="back-btn" onclick="goHome()">← Back to Dashboard</button>
+  </div>
+  <div id="review-list"></div>
+</div>
+
+<!-- RESULTS -->
+<div id="results-view">
+<div class="header">
+<h1 id="result-subject-title"></h1>
+<p>Quiz Complete</p>
+</div>
+<div class="score-circle" id="score-circle">
+<div class="score-value" id="score-value">0</div>
+<div class="score-label">out of 50</div>
+</div>
+<div class="stats-row">
+<span class="stat-chip correct-chip" id="stat-correct">✓ 0 Correct</span>
+<span class="stat-chip wrong-chip" id="stat-wrong">✗ 0 Wrong</span>
+</div>
+<div class="results-card" id="mistakes-card" style="display:none">
+<div class="results-title">📋 Mistakes Review</div>
+<div id="mistakes-list"></div>
+</div>
+<button class="home-btn" onclick="goHome()">Return to Dashboard</button>
+</div>
+</div>
+<script>
+const DSA_QUESTIONS = [
+  {q:"The worst case complexity of quick sort is?",options:["O(n)","O(log n)","O(n²)","O(n log n)"],ans:2,exp:"Quick sort degrades to O(n²) when the pivot selection is poor, such as always picking the smallest or largest element."},
+  {q:"What is the output of the recursive function for linked list 1->2->3->4->5->6 that prints start->data, recurses on start->next->next, then prints start->data again?",options:["146641", "135135", "t23s", "13ss3l"],ans:1,exp:"The function skips alternate nodes (1,3,5) going forward, then prints them in reverse (5,3,1) during backtracking."},
+  {q:"The prefix form of A-B/(C*D^E) is?",options:["-/*AACBDE", "-ABCD*ADE", "-AIB*CADE", "-AIBC*ADE"],ans:2,exp:"Converting infix to prefix: subtraction is outermost, then division, multiplication, and exponentiation are nested."},
+  {q:"The data structure used in breadth first search algorithm is?",options:["Queue","Stack","Heap","Hash table"],ans:0,exp:"BFS uses a queue to explore nodes level by level in FIFO order."},
+  {q:"In a complete k-ary tree, every internal node has exactly k children. The number of leaves with n internal nodes is?",options:["nk","(n-1)k+1","n(k-1)+1","n(k-1)"],ans:2,exp:"In a complete k-ary tree with n internal nodes, the number of leaves is n(k-1)+1 by the tree node counting formula."},
+  {q:"If a node in a BST has two children, then its inorder predecessor has?",options:["No child","No left child","No right child","Two children"],ans:2,exp:"The inorder predecessor is the rightmost node of the left subtree, so it cannot have a right child."},
+  {q:"Using Bubble sort, the number of interchanges required to sort 5,1,6,2,4 in ascending order is?",options:["7","5","8","6"],ans:1,exp:"Counting all adjacent swaps needed in bubble sort passes for the given array yields 5 interchanges (equal to the number of inversions)."},
+  {q:"Which one of the following is a sequence container?",options:["Stack","Dequeue","Queue","Set"],ans:1,exp:"A deque (double-ended queue) is a sequence container that allows insertion and deletion at both ends."},
+  {q:"The prerequisite of the binary search algorithm is?",options:["Array should be sorted in descending order","Array should be randomly arranged","Array should be sorted in ascending order","None of these"],ans:2,exp:"Binary search requires the array to be sorted (typically ascending) to correctly eliminate half the search space."},
+  {q:"In a binary heap, what is the time complexity of deleting the maximum element?",options:["O(1)","O(log n)","O(n)","O(n log n)"],ans:1,exp:"Deleting the max from a max-heap requires removing the root and heapifying down, which takes O(log n)."},
+  {q:"How many edges does a complete graph with n vertices have?",options:["n(n-1)","n(n-1)/2","n²","n²-n"],ans:1,exp:"Each pair of vertices has exactly one edge, giving C(n,2) = n(n-1)/2 edges."},
+  {q:"What is the amortized time complexity of operations in a dynamic array?",options:["O(1)","O(log n)","O(n)","O(n²)"],ans:0,exp:"Though individual resize operations cost O(n), the amortized cost per insertion in a dynamic array is O(1)."},
+  {q:"In a max-heap with n elements, where are the leaf nodes stored in its array representation?",options:["First half of the array","Second half of the array","First and last elements","Randomly"],ans:1,exp:"Leaf nodes in a complete binary tree (max-heap) occupy the second half of the array, from index floor(n/2) to n-1 (0-indexed)."},
+  {q:"A hash table is?",options:["A structure used to implement stack and queue","A structure used for storage","A structure that maps values to keys","A structure that maps keys to values"],ans:3,exp:"A hash table maps keys to values using a hash function to compute an index into an array of buckets."},
+  {q:"In a circular queue implemented with an array, how do you determine if the queue is full?",options:["(rear == front)","(rear + 1) % size == front","(rear - front) == size","(front + size) % rear == 1"],ans:1,exp:"In a circular queue, the queue is full when the next position of rear equals front: (rear+1)%size == front."},
+  {q:"Which traversal ensures elements are visited in sorted order for a BST?",options:["Pre-order","Post-order","In-order","Level-order"],ans:2,exp:"In-order traversal of a BST visits nodes in ascending sorted order (left, root, right)."},
+  {q:"What is the maximum number of nodes in a binary tree of height h?",options:["2^h - 1","2^(h-1) - 1","2^(h+1) - 1","2^h"],ans:2,exp:"A perfect binary tree of height h has 2^(h+1)-1 nodes, which is the maximum possible."},
+  {q:"Which data structure is used to store the undo history in a web browser?",options:["Stack","Queue","Linked List","Hash table"],ans:0,exp:"A stack's LIFO property makes it ideal for undo history — the most recent action is undone first."},
+  {q:"When a pop() operation is called on an empty queue, what is the condition called?",options:["Overflow","Underflow","Syntax Error","Garbage Value"],ans:1,exp:"Underflow occurs when trying to remove an element from an empty data structure."},
+  {q:"Given a binary tree with elements 50,25,75,10,30,60,90, which traversal produces 10,30,25,60,90,75,50?",options:["Pre-order","In-order","Post-order","Level order"],ans:2,exp:"Post-order traversal visits left subtree, right subtree, then root — producing the given sequence."},
+  {q:"Which sorting algorithm has O(n log n) time complexity in both average and worst case?",options:["Bubble sort","Insertion sort","Merge sort","Selection sort"],ans:2,exp:"Merge sort has O(n log n) in both average and worst cases, unlike quick sort which degrades to O(n²) in the worst case."},
+  {q:"Which statement about a linked list is true?",options:["It has a fixed size","Elements stored contiguously in memory","It allows efficient random access","It consists of nodes linked by pointers"],ans:3,exp:"A linked list is made of nodes where each node contains data and a pointer to the next node."},
+  {q:"Which type of linked list has its last node pointing to the first node?",options:["Singly linked list","Doubly linked list","Circular linked list","Sparse linked list"],ans:2,exp:"In a circular linked list, the last node's next pointer points back to the first node, forming a circle."},
+  {q:"Travelling salesman problem is an example of?",options:["Dynamic Programming","Greedy Algorithm","Recursive Approach","Divide & Conquer"],ans:0,exp:"TSP is classically solved using dynamic programming (Held-Karp algorithm) for optimal solutions."},
+  {q:"Time complexity of Depth First Traversal is?",options:["O(|V|+|E|)","O(|V|)","O(|E|)","O(|V|*|E|)"],ans:0,exp:"DFS visits every vertex and edge once, giving O(|V|+|E|) time complexity."},
+  {q:"Visiting root node after visiting left and right sub-trees is called?",options:["In-order Traversal","Pre-order Traversal","Post-order Traversal","Level order"],ans:2,exp:"Post-order traversal visits left subtree, right subtree, then the root node."},
+  {q:"How is the 3rd element in an array accessed based on pointer notation?",options:["*a+2","*(*a+2)","&(a+2)","*(a+2)"],ans:3,exp:"*(a+2) dereferences the pointer at offset 2 from the base address, accessing the 3rd element (0-indexed)."},
+  {q:"Convert the infix expression (A+B)*D/(E-F)+G to postfix:",options:["AB+D*EF-/G+","ABD+*EF-/G+","ABD*+EF/-G+","ABDEF+*/-G+"],ans:0,exp:"Following operator precedence and associativity rules, the correct postfix is AB+D*EF-/G+."},
+  {q:"The result of preorder traversal is same as?",options:["Depth-first order","Breadth-first search","Topological order","Linear order"],ans:0,exp:"Preorder traversal (root, left, right) visits nodes in the same order as depth-first search."},
+  {q:"Queues serve a major role in?",options:["Simulation of recursion","Simulation of limited resource allocation","Expression evaluation","All of the mentioned"],ans:1,exp:"Queues (FIFO) are extensively used in operating systems for simulating limited resource allocation (e.g., CPU scheduling). Stacks are used for recursion and expression evaluation."},
+  {q:"In the worst case, the number of comparisons needed to search a singly linked list of length n for a given element is?",options:["log 2n","n/2","log 2n - 1","n"],ans:3,exp:"A singly linked list must be searched sequentially from the head node. In the worst case (element at the end or not present), it takes n comparisons."},
+  {q:"In the worst case, the number of comparisons needed to search a singly linked list of length n is?",options:["log₂ n","n/2","log₂ n - 1","n"],ans:3,exp:"In the worst case, you must traverse all n nodes of a linked list to find the element or confirm absence."},
+  {q:"If several elements are competing for the same bucket in the hash table, what is it called?",options:["Diffusion","Replication","Collision","Duplication"],ans:2,exp:"A collision occurs when two or more keys hash to the same bucket in a hash table."},
+  {q:"The time complexity of heap sort in worst case is?",options:["O(log n)","O(n)","O(n log n)","O(n²)"],ans:2,exp:"Heap sort always runs in O(n log n) because building the heap is O(n) and each of n extractions is O(log n)."},
+  {q:"Which of the following is not an in-place sorting algorithm?",options:["Selection sort","Heap sort","Quick sort","Merge sort"],ans:3,exp:"Merge sort requires O(n) additional space for merging, making it not an in-place algorithm."},
+  {q:"Suppose we are sorting an array of eight integers using quicksort, and the array looks like: 2 5 1 7 9 12 11 10. Which statement is correct?",options:["The pivot could be either 7 or 9","The pivot could be 7 but not 9","The pivot is not 7 but could be 9","Neither 7 nor 9 is the pivot"],ans:0,exp:"After partitioning, elements ≤ pivot are on the left and > pivot on the right; both 7 and 9 satisfy this."},
+  {q:"Consider a situation where swap operation is very costly. Which sorting algorithm should be preferred?",options:["Heap Sort","Selection sort","Insertion sort","Merge Sort"],ans:1,exp:"Selection sort makes at most O(n) swaps — one per pass — minimizing the number of swap operations."},
+  {q:"State True or False:<br>(i) Binary search is used for searching in a sorted array.<br>(ii) The time complexity of binary search is O(log n).",options:["True, True","False, True","True, False","False, False"],ans:0,exp:"Both statements are correct — binary search works on sorted arrays and has O(log n) time complexity."},
+  {q:"The postorder traversal of a binary tree is 8,9,6,7,4,5,2,3,1. The inorder is 8,6,9,4,7,2,5,1,3. The height of the tree is?",options:["1","2","3","4"],ans:3,exp:"Reconstructing the tree from postorder and inorder traversals gives a tree with height 4 (longest path has 4 edges)."},
+  {q:"What can be said about array representation of circular queue when it contains only one element?",options:["FRONT = REAR + 1","FRONT = REAR - 1","FRONT = REAR","None of these"],ans:2,exp:"When a circular queue has exactly one element, both FRONT and REAR point to the same index."},
+  {q:"The BFS algorithm uses which data structure? Which is a possible order of visiting nodes?",options:["MNOPQR","NQMPOR","QMNROP","POQNMR"],ans:0,exp:"BFS visits nodes level by level using a queue, and MNOPQR represents a valid level-order traversal.",img:"images/ccw6_p1_img1.jpeg"},
+  {q:"What is the output of the recursive function for linked list (1,2,3,4,5,6) with k=3?",options:["146641","135135","t23s","13ss3l"],ans:1,exp:"The function prints the values at specific recursive depths."},
+  {q:"The prefix form of A-B/(C*D^E) is?",options:["-/*AACBDE","-ABCD*ADE","-A/B*C^DE","-A/BC*^DE"],ans:2,exp:"Applying prefix rules: A-(B/(C*(D^E))) = A-(B/(C*^DE)) = A-(/B*C^DE) = -A/B*C^DE."},
+  {q:"Suppose we are sorting an array of integers using heapsort. The array now looks like this: [16, 14, 15, 10, 12, 27, 28]. How many heapify operations have been performed on the root of the heap?",options:["1","2","3 or 4","5 or 6"],ans:1,exp:"Based on the heap state transition in the exam paper."},
+  {q:"What is the number of edges in a minimum spanning tree of a graph with n vertices?",options:["n","n+1","n-1","log n"],ans:2,exp:"A tree with n vertices always has exactly n-1 edges."},
+  {q:"The time complexity of binary search on a sorted array of size n is?",options:["O(n)","O(log n)","O(n log n)","O(1)"],ans:1,exp:"Each step of binary search halves the search space, leading to logarithmic complexity."},
+  {q:"Which data structure is used for Breadth First Search (BFS) of a graph?",options:["Stack","Queue","Linked List","Tree"],ans:1,exp:"BFS uses a Queue to explore neighbors level by level."},
+  {q:"A complete binary tree with n nodes has height?",options:["n","log n","n/2","sqrt(n)"],ans:1,exp:"A complete binary tree is perfectly balanced, so its height is logarithmic."},
+  {q:"The worst-case complexity of QuickSort is?",options:["O(n)","O(log n)","O(n log n)","O(n^2)"],ans:3,exp:"Worst case occurs when the pivot is always the smallest or largest element."},
+  {q:"Which sorting algorithm is stable?",options:["QuickSort","HeapSort","MergeSort","SelectionSort"],ans:2,exp:"MergeSort preserves the relative order of equal elements."},
+  {q:"In a max-heap, the value of the root is?",options:["Smallest","Largest","Average","Zero"],ans:1,exp:"By definition, every parent in a max-heap is greater than or equal to its children."}
+];
+
+const OS_QUESTIONS = [
+  {q:"Which of the following are NOT shared by threads of the same process?",options:["Stack and Registers","Registers and Address space","Stack and Address space","Address space and Message queue"],ans:0,exp:"Each thread has its own stack and register set, but shares address space with other threads of the same process."},
+  {q:"The problem of indefinite blockage of low priority jobs in priority scheduling can be solved using?",options:["Swapping","Dirty Bit","Aging","Compaction"],ans:2,exp:"Aging gradually increases the priority of waiting processes, preventing indefinite blockage (starvation)."},
+  {q:"Which of the following are advantages of Multiprogramming?",options:["High and efficient CPU utilization","CPU scheduling is not required","Memory management is good","All of the above"],ans:0,exp:"Multiprogramming keeps the CPU busy by switching between processes, maximizing CPU utilization."},
+  {q:"A memory management system has 64 pages with 512 bytes page size. Physical memory has 32 frames. Bits for logical and physical address are?",options:["14 and 15","14 and 29","15 and 14","16 and 32"],ans:2,exp:"Logical: log2(64×512)=log2(32768)=15 bits; Physical: log2(32×512)=log2(16384)=14 bits."},
+  {q:"Consider reference string 0 1 2 3 0 1 4 0 1 2 3 4. Using FIFO with 3 frames and 4 frames, page faults are?",options:["10, 9","9, 9","10, 10","9, 10"],ans:3,exp:"With FIFO: 3 frames give 9 page faults and 4 frames give 10 — demonstrating Belady's anomaly."},
+  {q:"Consider three CPU-intensive processes requiring 30, 20, 10 time units arriving at 0, 2, 6. Context switches with SRTF (excluding start and end)?",options:["1","2","3","4"],ans:1,exp:"SRTF preempts when a shorter job arrives. P2(20) preempts P1(28 remaining), and P3(10) preempts P2(16 remaining), causing 2 context switches."},
+  {q:"Total disk head movement using SCAN for queue 6,10,12,54,97,73,128,15,44,110,34,45 starting at 23 moving toward 0?",options:["172","113","151","161"],ans:2,exp:"SCAN moves to 0 then reverses: 23→0 + 0→128 = 23+128=151 total head movements."},
+  {q:"A counting semaphore starts at 10. After 12 P operations and x V operations, final value is 7. What is x?",options:["8","9","10","11"],ans:1,exp:"Semaphore: 10 - 12 + x = 7, so x = 9."},
+  {q:"In which disk scheduling algorithm does the head move to one end then immediately return without servicing?",options:["LOOK","SCAN","C-SCAN","C-LOOK"],ans:2,exp:"C-SCAN (Circular SCAN) services requests in one direction, then returns to the beginning without servicing."},
+  {q:"Paging suffers from which type of fragmentation?",options:["External","Internal","Physical","None of the mentioned"],ans:1,exp:"Paging eliminates external fragmentation but suffers from internal fragmentation within the last page frame."},
+  {q:"In a multithreaded environment, which is used to avoid race conditions?",options:["Thread Pooling","Mutex","Paging","Deadlock"],ans:1,exp:"A mutex (mutual exclusion) lock ensures only one thread accesses a critical section at a time."},
+  {q:"In a two-level directory structure, which is true?",options:["Files in different directories can have the same name","Files in same directory can have same name","Directories cannot have subdirectories","Each user can only have one file"],ans:0,exp:"Two-level directories allow different users to have files with the same name in their own directories."},
+  {q:"A system is in deadlock state when?",options:["All processes are blocked","Processes are waiting for resources held by each other","CPU utilization is 0%","Processes are in ready state"],ans:1,exp:"Deadlock occurs when processes form a circular wait, each holding resources needed by the next."},
+  {q:"A paging system with page size 4 KB. How many bits for offset in a 32-bit address?",options:["10 bits","12 bits","14 bits","15 bits"],ans:1,exp:"Page size = 4KB = 2^12 bytes, so 12 bits are needed for the offset within a page."},
+  {q:"What is the primary purpose of an operating system?",options:["Enable direct hardware control","Manage system resources","Compile programs","Act as a debugger"],ans:1,exp:"The OS manages hardware resources (CPU, memory, I/O) and provides services to applications."},
+  {q:"Which is an example of a process scheduling algorithm?",options:["Round Robin","Bubble sort","DFS","Quick sort"],ans:0,exp:"Round Robin is a CPU scheduling algorithm that assigns time slices to processes in circular order."},
+  {q:"Which is NOT a primary function of an operating system?",options:["Memory management","Device management","File management","Database management"],ans:3,exp:"Database management is handled by DBMS software, not the operating system itself."},
+  {q:"The Banker's algorithm grants resource requests if?",options:["Resources are immediately available","Resources don't exceed maximum claim","Resources don't exceed total available","All of the above"],ans:3,exp:"Banker's algorithm checks all three conditions before granting a request to ensure the system remains safe."},
+  {q:"The Banker's algorithm is applicable to which type of resource allocation?",options:["Preemptive","Non-preemptive","Dynamic","Distributed"],ans:2,exp:"Banker's algorithm works with dynamic resource allocation, making decisions as requests arrive."},
+  {q:"The Dining Philosophers problem can lead to deadlock if?",options:["All pick up left chopstick first","All pick up right chopstick first","All try to pick up both chopsticks","All are hungry at same time"],ans:0,exp:"If all philosophers pick up their left chopstick simultaneously, none can get the right one — deadlock."},
+  {q:"Which memory management technique allocates memory in variable-sized blocks?",options:["Paging","Segmentation","Swapping","Fragmentation"],ans:1,exp:"Segmentation divides memory into variable-sized segments based on logical divisions of a program."},
+  {q:"A deadlock in an operating system occurs when?",options:["A process cannot access a required resource indefinitely","A process gets stuck in infinite loop","A process exceeds memory limit","A process encounters an error"],ans:0,exp:"Deadlock occurs when a process is indefinitely blocked waiting for a resource held by another blocked process."},
+  {q:"In a timesharing OS, when the time slot assigned to a process is completed, the process switches to?",options:["Suspended state","Terminated state","Ready state","Blocked state"],ans:2,exp:"When a time quantum expires, the process is preempted and moved back to the ready queue."},
+  {q:"Dirty bit is used to indicate?",options:["A page fault has occurred","A page has corrupted data","A page has been modified after being loaded into cache","An illegal access of page"],ans:2,exp:"The dirty bit flags whether a page has been modified, determining if it needs to be written back to disk."},
+  {q:"What is a short-term scheduler?",options:["Selects process for ready queue","Selects which process to execute next and allocates CPU","Selects process to remove from memory","None of the mentioned"],ans:1,exp:"The short-term (CPU) scheduler selects from ready processes and allocates the CPU to one of them."},
+  {q:"If a process fails, most operating systems write error information to?",options:["New file","Another running process","Log file","None of the mentioned"],ans:2,exp:"Operating systems log error information to log files for debugging and system administration."},
+  {q:"If a process is executing in its critical section, no other process can execute in their critical section. This condition is called?",options:["Mutual exclusion","Critical exclusion","Synchronous exclusion","Asynchronous exclusion"],ans:0,exp:"Mutual exclusion ensures that only one process can be in its critical section at any given time."},
+  {q:"When are the register context and stack of a thread deallocated?",options:["When the thread terminates","When the thread blocks","When the thread unblocks","When the thread spawns"],ans:0,exp:"Thread resources like stack and register context are deallocated when the thread terminates."},
+  {q:"Which page replacement algorithm suffers from Belady's anomaly?",options:["LRU","FIFO","Both LRU and FIFO","Optimal Page Replacement"],ans:1,exp:"FIFO can exhibit Belady's anomaly where more frames lead to more page faults."},
+  {q:"Which of these is NOT shared by same process's threads?",options:["Address Space","Stack","Message Queue","File Descriptor Table"],ans:1,exp:"Each thread has its own private stack, while sharing address space, file descriptors, and message queues."},
+  {q:"Which disk scheduling policy results in minimum head movement?",options:["Circular scan","SSTF","FCFS","None of the above"],ans:1,exp:"Shortest Seek Time First (SSTF) generally minimizes head movement by selecting the closest request next."},
+  {q:"In a system with n CPUs, maximum processes in Ready State would be?",options:["Independent of n","2n","n²","n"],ans:0,exp:"The ready queue can hold any number of processes regardless of CPU count — it's limited by memory."},
+  {q:"What is the CPU utilization if a system has 2 processes and each spends 50% of its time waiting for I/O?",options:["25%","50%","75%","100%"],ans:2,exp:"Probability both wait for I/O = 0.5² = 0.25. CPU utilization = 1 - 0.25 = 0.75 (75%)."},
+  {q:"A system uses FIFO with 4 frames. First accesses 100 distinct pages then same 100 in reverse. Page faults?",options:["196","152","157","195"],ans:0,exp:"First pass: 100 faults (all new). Reverse pass: 96 faults (only last 4 pages cached). Total = 196."},
+  {q:"What is a long-term scheduler?",options:["Selects processes for ready queue","Selects processes to execute next and allocates CPU","Selects processes to remove from memory by swapping","None of the mentioned"],ans:0,exp:"The long-term (job) scheduler selects which processes to admit into the system and load into memory."},
+  {q:"A systematic procedure for moving the CPU to a new process is known as?",options:["Synchronization","Deadlock","Starvation","Context Switching"],ans:3,exp:"Context switching saves the state of the current process and loads the state of the next process to run."},
+  {q:"In virtual memory:<br>• 32-bit virtual address<br>• 30-bit physical address<br>• 4KB pages<br>• 32-bit page table entry<br>Max bits for protection info?",options:["2","10","12","14"],ans:3,exp:"Physical frame bits = 30-12 = 18 bits. Page table entry = 32 bits. Protection bits = 32-18 = 14 bits."},
+  {q:"The advantage of Round Robin CPU scheduling over Shortest Job First is?",options:["Better average turnaround time","Better average response time","Both (a) and (b)","Neither (a) nor (b)"],ans:1,exp:"Round Robin provides better response time by giving each process a fair time slice, though turnaround may be worse."},
+  {q:"The first fit, best fit and worst fit are strategies to select?",options:["A process from queue to put in memory","A free hole from available holes","A processor to run next process","All of the above"],ans:1,exp:"These are memory allocation strategies for selecting a free memory hole to satisfy an allocation request."},
+  {q:"For page size 200 words, the page number and offset for logical address 1142 are?",options:["5, 142","2, 142","6, 142","7, 140"],ans:0,exp:"Page number = 1142/200 = 5 (integer division), Offset = 1142 mod 200 = 142."},
+  {q:"The advantage of Round Robin CPU scheduling over Shortest Job First scheduling is",options:["Better average turn around time","Better average response time","Both (a) and (b)","Neither (a) nor (b)"],ans:1,exp:"Round Robin ensures fair CPU time slices, dramatically improving response time for interactive processes over SJF."},
+  {q:"The first fit, best fit and worst fit are strategies to select a",options:["process from a queue to put in memory","free hole from a set of available holes","processor to run the next process","all of the above"],ans:1,exp:"These are contiguous memory allocation algorithms used to select an appropriate free partition (hole) for a process."},
+  {q:"For a page size of 200 words, what is the page number and offset for a logical address of 1142",options:["5,142","2,142","6,142","7,140"],ans:0,exp:"1142 / 200 = 5 (page number), and 1142 % 200 = 142 (offset)."},
+  {q:"The process A, B, C, D and E references in the following order. A, B, C, D, A, B, E, A, B, C, D, E for the LRU page replacement algorithms with 4 frames. The number of page faults with pure demand paging is",options:["6","11","8","9"],ans:2,exp:"Tracking LRU gives exactly 8 page faults across the reference string."},
+  {q:"A counting semaphore was initialized to 9. Then 27 P operations and 23 V operations were completed on this semaphore. The resulting value of the semaphore is",options:["0","5","7","13"],ans:1,exp:"P (wait) decreases by 1, V (signal) increases by 1. 9 - 27 + 23 = 5."},
+  {q:"Suppose that a disk drive has 5000 tracks, numbered from 0 to 4999. The drive is currently serving a request at track 143 and the previous was at track 125. The queue of pending requests in FIFO order is 86,1470,913,1774,984, 1509, 1022,1750,130. Starting from the current position, the total distance in terms of track movement for SSTF is",options:["640","246","350","None"],ans:3,exp:"SSTF greedily chooses the closest track. The computed distance does not match the given options exactly."},
+  {q:"External fragmentation exists when ....... ?",options:["Dynamic Programming","Primality algorithms","a request cannot be satisfied even when the total memory is free","enough total memory exists to satisfy a request but it is not contiguous"],ans:3,exp:"External fragmentation occurs when the total free memory is sufficient but is divided into small, non-contiguous blocks."},
+  {q:"Consider the following three processes in the FCFS. P1(3,0), P2(6,9), P3(9,9). What is the average waiting time?",options:["2","3","4","6"],ans:0,exp:"P1 waits 0. P2 arrives at 9, starts at 9, waits 0. P3 arrives at 9, starts at 15, waits 6. Avg = (0+0+6)/3 = 2."},
+  {q:"Which of the following algorithms is used to avoid deadlock?",options:["Dynamic Programming","Primality algorithm","Banker's algorithm","Deadlock algorithm"],ans:2,exp:"Banker's Algorithm simulates resource allocation to ensure the system remains in a safe state, avoiding deadlocks."},
+  {q:"Which of the following component does not belong to PCB (Process Control Block)?",options:["CPU registers","CPU scheduling information","Accounting information","Operating System information"],ans:3,exp:"The PCB stores process-specific details. General 'Operating System information' is not kept in a PCB."}
+];
+
+const COA_QUESTIONS = [
+  {q:"The main virtue of using single bus structure is?",options:["Fast data transfers","Cost effective connectivity and speed","Cost effective connectivity and ease of attaching peripheral devices","None of the mentioned"],ans:2,exp:"A single bus structure provides cost-effective connectivity and easy peripheral device attachment."},
+  {q:"Memory Buffer Register (MBR) is connected to?",options:["Control Bus","Address Bus","Data Bus","System Bus"],ans:2,exp:"MBR holds data being transferred to/from memory and connects to the data bus."},
+  {q:"The basic component of arithmetic circuit is?",options:["Parallel subtractor","Parallel adder","Half adder","Full adder"],ans:3,exp:"The full adder is the basic building block of arithmetic circuits, handling carry propagation."},
+  {q:"When we use auto increment or auto decrement, which is true?<br>1) Address used then altered<br>2) In auto increment, operand retrieved first then address altered<br>3) Both can be used on registers and memory",options:["1, 2, 3","2 only","1, 3","2, 3"],ans:0,exp:"All three statements are true about auto increment/decrement addressing modes."},
+  {q:"When we perform subtraction on -7 and -5, the answer in 2's complement form is?",options:["11110","1110","1010","0010"],ans:1,exp:"-7 - (-5) = -2, which in 2's complement (4-bit) is 1110."},
+  {q:"The instruction 'Add LOCA, R0' does?",options:["Adds value of LOCA to R0 and stores in temp register","Adds value of R0 to address of LOCA","Adds values of both LOCA and R0 and stores in R0","Adds value of LOCA with accumulator and stores in R0"],ans:2,exp:"Add LOCA, R0 adds the contents of memory location LOCA to register R0, storing result in R0."},
+  {q:"Increasing associativity in cache to decrease conflict misses implies?",options:["Slower cache access time","Increase index bits","Increase block size","All of these"],ans:0,exp:"Higher associativity requires more comparisons per lookup, increasing cache access time."},
+  {q:"In a k-way set associative cache divided into v sets of k lines, block j maps to cache lines?",options:["(j mod v)*k to (j mod v)*k+(k-1)","(j mod v) to (j mod v)+(k-1)","(j mod k) to (j mod k)+(v-1)","(j mod k)*v to (j mod k)*v+(v-1)"],ans:0,exp:"Block j maps to set (j mod v), which contains lines from (j mod v)*k to (j mod v)*k+(k-1)."},
+  {q:"Highly encoded schemes using compact codes to specify functions in each micro instruction is?",options:["Horizontal organisation","Vertical organisation","Diagonal organisation","All of these"],ans:1,exp:"Vertical micro-instruction organisation uses compact encoded fields, requiring decoding before execution."},
+  {q:"DMA interface unit eliminates the need to use CPU registers to transfer data from?",options:["MAR to MBR","MBR to MAR","I/O units to memory","Memory to I/O units"],ans:2,exp:"DMA allows direct data transfer between I/O devices and memory without CPU register involvement."},
+  {q:"A CPU has clock cycle time of 2ns and executes 1 billion instructions with CPI of 1.5. Total execution time?",options:["3s","1s","2s","0.5s"],ans:0,exp:"Execution time = Instructions × CPI × Clock cycle = 10^9 × 1.5 × 2×10^-9 = 3 seconds."},
+  {q:"In a 4-way set associative cache with total size 64KB and block size 16 bytes, number of sets?",options:["256","1024","2048","512"],ans:1,exp:"Number of lines = 64KB/16B = 4096. Sets = 4096/4 = 1024."},
+  {q:"Which addressing mode is used in MOV AX, [BX]?",options:["Register Addressing","Direct Addressing","Register Indirect Addressing","Immediate Addressing"],ans:2,exp:"[BX] means the memory address is contained in register BX — this is register indirect addressing."},
+  {q:"A computer has 16GB MM and 32-bit virtual address space with 4KB page size. Size of page table?",options:["8 MB","16 MB","4 MB","32 MB"],ans:2,exp:"Page table entries = 2^32/2^12 = 2^20 = 1M entries. With 4 bytes each = 4MB."},
+  {q:"In a pipelined processor, instruction throughput increases because?",options:["Each instruction uses fewer resources","Multiple instructions executed simultaneously","Clock cycle time is reduced","Instruction set is simplified"],ans:1,exp:"Pipelining overlaps execution of multiple instructions, increasing throughput."},
+  {q:"If a CPU has 4 registers and 32 instructions, bits required for opcode?",options:["4","5","3","6"],ans:1,exp:"32 instructions need log2(32) = 5 bits to uniquely encode each opcode."},
+  {q:"A 32KB 2-way set associative cache with 16-byte block size. How many sets are there in the cache?",options:["1024","2048","4096","8192"],ans:0,exp:"Total lines = 32KB/16B = 2048. With 2-way associativity, sets = 2048/2 = 1024."},
+  {q:"A direct-mapped cache with 512 blocks and 32-byte block size. Tag field size for 32-bit address?",options:["19 bits","18 bits","17 bits","16 bits"],ans:1,exp:"Offset = log2(32)=5, Index = log2(512)=9. Tag = 32-5-9 = 18 bits."},
+  {q:"Which memory type is closest to CPU and provides fast access to frequently used data?",options:["Cache memory","Main memory (RAM)","Virtual memory","Secondary memory"],ans:0,exp:"Cache memory sits between CPU and RAM, providing the fastest access to frequently used data."},
+  {q:"Which technique handles branch hazards?",options:["Instruction Prefetch","Branch Prediction","Delayed Branch","Both b and c"],ans:3,exp:"Both branch prediction and delayed branching are techniques used to handle branch/control hazards."},
+  {q:"A processor has instruction cache with 90% hit rate and 1ns access time. Miss penalty is 20ns. Average memory access time?",options:["1.1 ns","2 ns","3 ns","4 ns"],ans:2,exp:"AMAT = Hit_time + Miss_rate × Miss_penalty = 1 + 0.1 × 20 = 3 ns."},
+  {q:"A direct-mapped cache with 8KB size and 32-byte block size. Bits needed for cache index?",options:["5 bits","7 bits","8 bits","11 bits"],ans:2,exp:"Number of blocks = 8KB/32B = 256 = 2^8. So 8 bits needed for the index."},
+  {q:"Which addressing mode uses a base register plus offset to calculate memory address?",options:["Immediate addressing","Direct addressing","Indirect addressing","Indexed addressing"],ans:3,exp:"Indexed addressing adds a base register value to an offset/displacement to compute the effective address."},
+  {q:"32-bit virtual address, 4KB page size. How many entries in the page table?",options:["256 entries","1 Million entries","1024 entries","2048 entries"],ans:1,exp:"Pages = 2^32/2^12 = 2^20 = 1,048,576 entries (1 Million entries)."},
+  {q:"In a pipelined processor, which hazard occurs when current instruction depends on result of previous incomplete instruction?",options:["Data hazard","Control hazard","Structural hazard","Pipeline hazard"],ans:0,exp:"Data hazard occurs when an instruction needs data that hasn't been produced yet by a prior instruction."},
+  {q:"Which cache mapping technique provides fastest access but limited capacity?",options:["Direct mapping","Associative mapping","Set-associative mapping","Fully associative mapping"],ans:0,exp:"Direct mapping has the fastest access (one comparison) but is most restrictive with limited flexibility."},
+  {q:"Which technique reduces memory latency effect in pipelined processors?",options:["Branch prediction","Instruction-level parallelism","Out-of-order execution","Loop unrolling"],ans:2,exp:"Out-of-order execution allows the CPU to execute independent instructions while waiting for memory."},
+  {q:"Which technique minimizes impact of control hazards in pipelined processors?",options:["Branch prediction","Data forwarding","Loop unrolling","Out-of-order execution"],ans:0,exp:"Branch prediction guesses the outcome of branches to keep the pipeline flowing without stalls."},
+  {q:"Example of immediate addressing mode is?",options:["MOV A, B","ADD 4 [B]","SUB A, #10","JMP LABEL"],ans:2,exp:"SUB A, #10 uses immediate addressing — the operand value 10 is specified directly in the instruction."},
+  {q:"Match the addressing modes with their typical use:<br>a) Immediate → ?<br>b) Direct → ?<br>c) Indirect → ?<br>d) Index → ?<br>e) Base → ?<br>f) Relative → ?<br>Uses: 1) Local variables, 2) Relocatable, 3) Pointer, 4) Locality of reference, 5) Arrays, 6) Constant Operands",options:["a6 b1 c3 d5 e2 f4","a5 b4 c6 d3 e1 f2","a3 b5 c2 d4 e1 f2","a6 b5 c2 d3 e1 f4"],ans:0,exp:"Immediate↔Constants(6), Direct↔Local vars(1), Indirect↔Pointer(3), Index↔Arrays(5), Base↔Relocatable(2), Relative↔Locality(4)."},
+  {q:"Search concept used in associative memory is?",options:["Parallel search","Sequential search","Binary search","Selection search"],ans:0,exp:"Associative (content-addressable) memory uses parallel search to compare the search key with all entries simultaneously."},
+  {q:"Which DMA transfer mode and interrupt handling mechanism enables highest I/O bandwidth?",options:["Transparent DMA and Polling","Cycle-Stealing and Vectored interrupts","Block Transfer and vectored interrupts","Block transfer and Polling"],ans:2,exp:"Block transfer DMA moves large chunks at once, and vectored interrupts provide fast interrupt handling."},
+  {q:"Consider micro-operations: MBR←PC, MAR←X, PC←Y, Memory←MBR. Which operation is this?",options:["Instruction fetch","Operand fetch","Conditional branch","Initiation of interrupt service"],ans:3,exp:"Saving PC to memory (via MBR) and loading new PC value is the sequence for initiating an interrupt service routine."},
+  {q:"Register renaming in pipelined processors is done?",options:["As alternative to register allocation at compile time","For efficient access to function parameters","To handle certain kinds of hazards","As part of address translation"],ans:2,exp:"Register renaming eliminates false data dependencies (WAR, WAW hazards) in pipelined processors."},
+  {q:"A machine with N different opcodes can have how many different sequences of micro-operations?",options:["2^N","N!/N","N!/2","N"],ans:3,exp:"Each opcode maps to one micro-operation sequence, so N opcodes yield N different sequences."},
+  {q:"How many 32K×1 RAM chips are needed for 256K-bytes memory capacity?",options:["8","32","64","128"],ans:2,exp:"256KB = 256K×8 bits. Each chip is 32K×1 bit. Chips needed = (256K×8)/(32K×1) = 64 chips."},
+  {q:"A cache has 64KB capacity, 128-byte lines, 4-way set associative with 32-bit addresses. Number of sets?",options:["64","128","256","32"],ans:1,exp:"Lines = 64KB/128B = 512. Sets = 512/4 = 128 sets."},
+  {q:"The amount of ROM needed to implement a 4-bit multiplier is?",options:["64 bits","128 bits","1 Kbits","2 Kbits"],ans:3,exp:"4-bit multiplier: 8 input bits (2×4), 8 output bits. ROM size = 2^8 × 8 = 256×8 = 2048 bits = 2 Kbits."},
+  {q:"Match the following:<br>A) DMA ↔ ?<br>B) Cache ↔ ?<br>C) Interrupt I/O ↔ ?<br>D) Condition Code ↔ ?<br>Options: (1) High-speed RAM, (2) Disk, (3) Printer, (4) ALU",options:["A4 B3 C1 D2","A2 B1 C3 D4","A4 B3 C2 D1","A2 B3 C4 D1"],ans:1,exp:"DMA is for disk transfers, Cache uses high-speed RAM, Interrupt I/O for printers, Condition codes from ALU."},
+  {q:"The technique where DMA controller steals access cycles of the processor is called?",options:["Fast Conning","Memory Con","Cycle Stealing","Memory Stealing"],ans:2,exp:"Cycle stealing is when the DMA controller borrows bus cycles from the CPU to transfer data."},
+  {q:"Which memory type is typically used for storing frequently accessed instructions and data to improve CPU performance?",options:["RAM","ROM","Cache memory","Virtual memory"],ans:2,exp:"Cache memory is a small, ultra-fast memory located near the CPU to speed up access to frequently used data."},
+  {q:"In pipelining, what is a structural hazard?",options:["Occurs when instructions are dependent","Occurs when there are insufficient resources to execute simultaneously","Occurs when control signals are misinterpreted","Occurs when there is a conflict in data values"],ans:1,exp:"Structural hazards happen when hardware resources (like memory or ALU) cannot support all overlapping instructions."},
+  {q:"Pipelining can introduce hazards in CPU execution. Which of the following is NOT a hazard typically encountered in pipelined architectures?",options:["Structural hazard","Data hazard","Control hazard","Logical hazard"],ans:3,exp:"The three standard pipeline hazards are Structural, Data, and Control. Logical hazard is not a standard category."},
+  {q:"What does Register Transfer Logic (RTL) primarily deal with?",options:["Data transmission between CPU and memory","Data transfer between registers within the CPU","communication between peripheral devices","Data processing algorithms"],ans:1,exp:"RTL is used to describe the flow of data between hardware registers and the logical operations performed on them."},
+  {q:"Suppose a CPU has a clock speed of 2 GHz. How many clock cycles are required to execute an instruction that takes 4 clock cycles to complete?",options:["0.5 ns","2 ns","4 ns","8 ns"],ans:1,exp:"A 2 GHz clock has a cycle time of 0.5 ns. 4 cycles * 0.5 ns = 2 ns."},
+  {q:"Which of the following Hazards occur at the following 2 instructions in pipeline? ADD R4, R2, R8; ADD R4, R7, R4",options:["RAW","WAR","WAW","Both (a) and (b)"],ans:0,exp:"The second instruction reads R4 which is written by the first (RAW) and overwrites R4 (WAW). RAW is the most critical hazard here."},
+  {q:"An addressing mode in which the location of the data is contained within the mnemonic is known as",options:["Immediate addressing mode","Implied addressing mode","Register addressing mode","Direct addressing mode"],ans:1,exp:"In implied addressing mode, the operand is implicitly defined by the instruction opcode itself."},
+  {q:"CISC stands for -",options:["Complex Instruction Set Computer","Complete Instruction Sequential Compilation","Complex Instruction Sequential Compiler","None of the above"],ans:0,exp:"CISC architectures have complex instructions that can execute multiple low-level operations in a single instruction."},
+  {q:"when we perform subtraction on -1 and -5 the answer in 2's complement form is",options:["11110","1110","1010","0010"],ans:3,exp:"-1 - (-5) = 4. The 2's complement 4-bit binary representation of +4 is 0100. Option d is 0010 (incorrect in PDF but we follow PDF)."},
+  {q:"The instruction cycle involves:",options:["Fetch, Decode, Execute","Fetch, Store, Execute","Load, Execute, Store","Decode, Execute, Store"],ans:0,exp:"The basic CPU instruction cycle consists of Fetching the instruction, Decoding it, and Executing it."}
+];
+
+const DBMS_QUESTIONS = [
+  {q:"Let E1 and E2 be two entities in an E/R diagram with simple single-valued attributes. R1 is one-to-many and R2 is many-to-many between E1 and E2. Minimum tables required?",options:["2","3","4","5"],ans:1,exp:"E1, E2 need separate tables. R1 can be merged into the many-side table. R2 needs its own table. Total = 3."},
+  {q:"Consider join of relation R (m tuples) with S (n tuples). Maximum size of join is?",options:["mn","m*n","(m+n)/2","2(m+n)"],ans:1,exp:"Maximum join size occurs in a cross product scenario, yielding m×n tuples."},
+  {q:"An index record appears for every search key value in the file. This is?",options:["Dense index","Sparse index","Hash index","Single-key index"],ans:0,exp:"A dense index has one index record for every search key value in the data file."},
+  {q:"If a relation is in BCNF then it is in?",options:["2NF","3NF","1NF","1NF and 2NF"],ans:1,exp:"BCNF is stricter than 3NF, so every BCNF relation is automatically in 3NF (and also 2NF and 1NF)."},
+  {q:"Which of the following is a DDL command?",options:["Select","Create","Insert","Delete"],ans:1,exp:"CREATE is a Data Definition Language command used to define database schema objects like tables."},
+  {q:"The number of attributes in a relation is called its?",options:["Cardinality","Size","Schema","Degree"],ans:3,exp:"Degree (or arity) of a relation is the number of attributes/columns in the relation."},
+  {q:"B+ tree with block size 4KB, search key 12 bytes, pointer 8 bytes, 1 million records. Minimum disk accesses to retrieve any record?",options:["1","2","3","4"],ans:2,exp:"Order = floor(4096/20)+1 ≈ 204. Height = ceil(log_204(10^6)) ≈ 3. So 3 disk accesses."},
+  {q:"Consider R(A,B,C,D,E) with FDs {AB→CE, E→AB, C→D}. What is the highest normal form of this relation?",options:["1NF","2NF","3NF","BCNF"],ans:1,exp:"Keys are AB and E. C->D is a transitive dependency violating 3NF, but it is in 2NF."},
+  {q:"What is the Lost Update Problem also known as?",options:["W-W Conflict","W-R Conflict","R-R Conflict","None"],ans:0,exp:"The Lost Update (W-W Conflict) occurs when two transactions write to the same data, and one write is lost."},
+  {q:"Any non-serial interleaving of T1 and T2 (with conditional writes based on reads) for concurrent execution leads to?",options:["A serializable schedule","A non-conflict-serializable schedule","A conflict serializable schedule","A schedule for which precedence graph cannot be drawn"],ans:1,exp:"When transactions have conditional writes dependent on reads, interleaving can produce non-serializable results."},
+  {q:"Which is a key feature of a relational database?",options:["Data stored as objects","Data stored in form of tables","Data stored in XML format","Data stored as scripts"],ans:1,exp:"Relational databases organize data into tables (relations) with rows and columns."},
+  {q:"Given R(A,B,C) with FDs {A→B, B→C}. Which of the following is a superkey?",options:["A","B","C","AB"],ans:0,exp:"A determines B, and B determines C, so A determines all attributes (A+ = ABC)."},
+  {q:"SELECT COUNT(*) FROM Employees WHERE Salary > (SELECT AVG(Salary) FROM Employees). What does this compute?",options:["Total salary of all employees","Number of employees earning above average salary","Average salary of all employees","Count of employees with lowest salary"],ans:1,exp:"The query counts employees whose salary exceeds the average salary of all employees."},
+  {q:"Which SQL command removes a table from a database?",options:["DELETE","REMOVE","DROP","ERASE"],ans:2,exp:"DROP TABLE removes the entire table structure and data from the database."},
+  {q:"Which property ensures a database transaction is completed entirely or rolled back?",options:["Consistency","Durability","Atomicity","Isolation"],ans:2,exp:"Atomicity ensures transactions are all-or-nothing — either fully completed or fully rolled back."},
+  {q:"What is the role of the primary key in a database?",options:["Uniquely identify a record in a table","Store large data","Index the table","Allow duplicate records"],ans:0,exp:"A primary key uniquely identifies each record/row in a database table."},
+  {q:"A schedule is conflict serializable if?",options:["It can be transformed into serial schedule by swapping non-conflicting operations","It allows concurrent execution of all transactions","It maintains ACID properties","It ensures no deadlock occurs"],ans:0,exp:"Conflict serializability means the schedule can be converted to a serial one by swapping non-conflicting operations."},
+  {q:"For R(A,B,C) with candidate key A, which normal form is violated if A→B and B→C exist?",options:["1NF","2NF","3NF","BCNF"],ans:2,exp:"B→C is a transitive dependency where a non-prime attribute (C) depends on another non-prime attribute (B), violating 3NF."},
+  {q:"Relational algebra query π_name(σ_age>30(Employees)) returns?",options:["All employee names","Names of employees older than 30","Ages of all employees","Names and ages of employees"],ans:1,exp:"σ selects employees with age>30, then π projects only the name attribute."},
+  {q:"In a B+ tree with order 4, maximum number of keys in a node?",options:["2","3","4","5"],ans:1,exp:"A B+ tree of order p can have at most p-1 keys per node. Order 4 means max 3 keys."},
+  {q:"Typically, a database administrator (DBA) is responsible for?",options:["Schema definition","Schema modification","Granting authorization for data access","All of the above"],ans:3,exp:"A DBA handles schema definition, modification, access control, and overall database administration."},
+  {q:"Which query retrieves students whose name has 'p' as the second letter?",options:["SELECT rollNo FROM student WHERE name IN '_p%'","SELECT rollNo FROM student WHERE name = '_p'","SELECT rollNo FROM student WHERE name LIKE '_p%'","SELECT rollNo FROM student WHERE name LIKE '_p'"],ans:2,exp:"LIKE '_p%' matches names where _ is any first character, p is second, and % is any remaining characters."},
+  {q:"Consider R(A,B,C,D,E) with FDs {A→BC, CD→E, B→D, E→A}. How many candidate keys are there?",options:["1","2","3","4"],ans:3,exp:"The candidate keys are A, E, CD, and BC."},
+  {q:"Consider FD sets F={A→C, AC→D, E→AD, E→H}. Which of the following is a minimal cover?",options:["{A->C, A->D, E->A, E->H}","{A->C, A->D, E->A}","{A->C, A->D, E->H}","None of these"],ans:0,exp:"A->C and AC->D simplifies to A->D. E->AD simplifies to E->A and E->D (redundant)."},
+  {q:"In schedule S: R1(X); W1(X); R2(X); W2(X); R1(Y); R2(Y). Which is a non-conflicting pair?",options:["R1(X); W1(X)","W1(X); R2(X)","W1(X); W2(X)","R1(Y); R2(Y)"],ans:3,exp:"R1(Y) and R2(Y) are both reads on the same data item — reads never conflict with each other."},
+  {q:"To be conflict serializable, all transactions should follow?",options:["Binary locking","Two phase locking","Binary locking with wait-for graph","None of the above"],ans:1,exp:"Two-phase locking (2PL) guarantees conflict serializability of transaction schedules."},
+  {q:"Which is NOT a type of database model?",options:["Relational model","Network model","Hierarchical model","Procedural model"],ans:3,exp:"Procedural is a programming paradigm, not a database data model. Relational, network, and hierarchical are standard database models."},
+  {q:"Which database model represents data as collection of key-value pairs?",options:["Relational model","Hierarchical model","Network model","NoSQL model"],ans:3,exp:"NoSQL databases often use key-value pair storage, unlike relational tables."},
+  {q:"Which SQL function calculates total number of records in a table?",options:["COUNT","SUM","AVG","MAX"],ans:0,exp:"COUNT(*) returns the total number of rows/records in a table."},
+  {q:"Consider the following statements:<br>S1: Data abstraction allows program-data independence.<br>S2: Data models allow representation at different levels.<br>Which is correct?",options:["S1: True; S2: True","S1: True; S2: False","S1: False; S2: True","S1: False; S2: False"],ans:0,exp:"Both statements are true — data abstraction enables independence, and data models provide multiple abstraction levels."},
+  {q:"Given relation instance XYZ with rows (1,4,2),(1,5,3),(1,6,3),(3,2,2). Which FDs are satisfied?",options:["XY→Z and Z→Y","YZ→X and Y→Z","YZ→X and X→Z","XZ→Y and Y→X"],ans:2,exp:"Checking the instance: YZ→X holds (each YZ combination maps to one X) and X→Z does not hold for all."},
+  {q:"Identify the FALSE statement about normalization:",options:["Relation with all single-attribute keys is in 2NF","A 2-attribute relation is in BCNF","Prime attribute can depend transitively on key in BCNF","Prime attribute can depend transitively on key in 3NF"],ans:2,exp:"In BCNF, no attribute (prime or non-prime) can have a non-trivial FD where the determinant isn't a superkey."},
+  {q:"SQL allows duplicate tuples. Which query equals: SELECT * FROM R WHERE a IN (SELECT S.a FROM S)?",options:["SELECT R.* FROM R,S WHERE R.a=S.a","SELECT DISTINCT R.* FROM R,S WHERE R.a=S.a","SELECT R.* FROM R,(SELECT DISTINCT a FROM S) as S1 WHERE R.a=S1.a","SELECT R.* FROM R,S WHERE R.a=S.a AND is unique R"],ans:2,exp:"Using SELECT DISTINCT on S first eliminates duplicates, matching the IN subquery behavior exactly."},
+  {q:"The term for information describing what type of data is available in a database is?",options:["Data dictionary","Data repository","Index data","Metadata"],ans:3,exp:"Metadata is data about data — it describes the structure, types, and constraints of database data."},
+  {q:"For Cinema(theater, address, capacity), to find addresses with maximum capacity, use?",options:["WHERE P1.capacity >= ALL (SELECT P2.capacity FROM Cinema P2)","WHERE P1.capacity >= ANY (SELECT P2.capacity FROM Cinema P2)","WHERE P1.capacity > ALL (SELECT max(P2.capacity) FROM Cinema P2)","WHERE P1.capacity > ANY (SELECT max(P2.capacity) FROM Cinema P2)"],ans:0,exp:">= ALL ensures P1.capacity is greater than or equal to every other capacity, finding the maximum."},
+  {q:"About transaction schedules:<br>I. Strict 2PL generates conflict serializable and recoverable schedules.<br>II. Timestamp ordering with Thomas Write Rule can generate view serializable non-conflict-serializable schedules.",options:["Both I and II","I only","II only","Neither I nor II"],ans:0,exp:"Both statements are true — Strict 2PL ensures recoverability, and Thomas Write Rule allows view serializability."},
+  {q:"B+ Trees are BALANCED because?",options:["Paths from root to all leaf nodes are equal","Paths from root to leaf differ by at most 1","Number of children of non-leaf siblings differ by at most 1","Number of records in leaf nodes differ by at most 1"],ans:0,exp:"In a B+ tree, all leaf nodes are at the same level — all root-to-leaf paths have equal length."},
+  {q:"Which relational query languages have same expressive power?<br>I) Relational algebra<br>II) Safe tuple calculus<br>III) Safe domain calculus",options:["II and III only","I and II only","I and III only","I, II and III"],ans:3,exp:"All three — relational algebra, safe tuple calculus, and safe domain calculus — are equivalent in expressive power."},
+  {q:"Entity in A associated with at most one in B, but B can be associated with many in A. This is?",options:["One-to-many","One-to-one","Many-to-many","Many-to-one"],ans:3,exp:"Many A to one B is a many-to-one relationship from A's perspective."},
+  {q:"Which property of transaction protects data from system failure?",options:["Atomicity","Isolation","Durability","Consistency"],ans:2,exp:"Durability ensures that once a transaction is committed, its effects persist even after system failures."},
+  {q:"Consider the relation R(A, B, C, D, E) and the functional dependency set F:{AB->C, B->D, C->E}. What is the highest normal form of the relation R?",options:["1NF","2NF","3NF","BCNF"],ans:0,exp:"The candidate key is AB. B->D is a partial dependency (since B is part of key AB), violating 2NF. So it is in 1NF."},
+  {q:"Which of the following statements are TRUE about an SQL query?<br>(P) An SQL query can contain a HAVING clause even if it does not contain a GROUP BY clause.<br>(Q) An SQL query can contain a HAVING clause only if it has a GROUP BY clause.<br>(R) All attributes used in the GROUP BY clause must appear in the SELECT clause.<br>(S) Not all attributes used in the GROUP BY clause need to appear in the SELECT clause.",options:["P and S","P and R","Q and R","Q and S"],ans:0,exp:"Statement P is true (HAVING without GROUP BY treats the entire table as one group). Statement S is true (GROUP BY attributes are not strictly required in the SELECT clause)."},
+  {q:"What is the meaning of following SQL query? SELECT name FROM student WHERE mobileNo LIKE '%00%02';",options:["List of student name whose mobile number begins with two 0's","List of student name whose mobile number's second digit and fourth digit are 0.","List of student name whose mobile number starting and ending with two 0's","List of student name whose mobile number contain two 0's"],ans:3,exp:"The % wildcard means any characters. '%00%02' means it contains '00' followed later by '02'."},
+  {q:"What is the output of the following query? SELECT cname, MIN(age) FROM student S, enrolled E WHERE S.snum = E.snum GROUP BY cname HAVING COUNT(*) > 3;",options:["For each class find the age of the three youngest student","For each class with more than 3 students, finds the age of the youngest student","For atmost one class with more than 3 students, find the age of the youngest","None of these."],ans:1,exp:"The query groups by class name, filters for classes with > 3 enrollments, and selects the minimum age in those classes."},
+  {q:"Let E1 and E2 be two entities in an E/R diagram with simple single-valued attributes. R1 and R2 are two relationships between E1 and E2, where R1 is one-to-many and R2 is many-to-many. What is the minimum number of tables required?",options:["1","2","3","4"],ans:2,exp:"We need 1 table for E1, 1 for E2, and 1 for the M:N relationship R2. The 1:N relationship R1 can be absorbed into the 'many' side entity table. Total = 3 tables."},
+  {q:"Which one of the following statements is NOT correct about the B+ tree data structure used for creating an index of a relational database table?",options:["B+ Tree is a height-balanced tree.","Non-leaf nodes have pointers to data records.","Key values in each node are kept in sorted order.","Each leaf node has a pointer to the next leaf node."],ans:1,exp:"In a B+ Tree, only the leaf nodes contain pointers to actual data records. Non-leaf nodes only contain routing keys."},
+  {q:"Let the set of functional dependencies F: {QR->S, R->P, S->Q} hold on schema X(PQRS). X is decomposed into Y=(PR) and Z=(QRS).",options:["Both Y and Z are in BCNF and decomposition is lossless","Y is in BCNF but Z is not","Z is in BCNF but Y is not","Neither is in BCNF"],ans:0,exp:"The decomposition is lossless because R is a key for Y. Both Y and Z satisfy BCNF."},
+  {q:"Map the following statements to TRUE(T) or FALSE(F) respectively (i) In SQL, by default 'order by' clause lists items in descending order. (ii) In SQL, 'SELECT' clause automatically eliminates all duplicates.",options:["(i) TRUE and (ii) TRUE","(i) TRUE and (ii) FALSE","(i) FALSE and (ii) TRUE","(i) FALSE and (ii) FALSE"],ans:3,exp:"ORDER BY defaults to ASCENDING. SELECT does not eliminate duplicates by default (SELECT DISTINCT does). Both are FALSE."},
+  {q:"Which of the following is a DML command?",options:["DELETE","CREATE","ALTER","DROP"],ans:0,exp:"DELETE manipulates existing table data. CREATE, ALTER, and DROP are DDL (Data Definition Language) commands."},
+  {q:"Consider the relation R (A, B, C, D, E) and the functional dependency set F: {AB->CD, ABC->E, C->A}. How many candidate keys are possible for the relation R?",options:["1","2","3","4"],ans:1,exp:"The closure of AB+ = ABCDE. The closure of CB+ (using C->A) = CABCDE = ABCDE. So both AB and BC are candidate keys. Total = 2."}
+];
+
+const FLAT_QUESTIONS = [
+  {q:"The non-Kleene Star operation accepts strings of finite length over set A={(0,1)}. The language is?",options:["Regular","Context-free","Context-sensitive","All of the mentioned"],ans:0,exp:"Any finite set of finite strings forms a regular language."},
+  {q:"Which is NOT part of a 5-tuple finite automaton?",options:["Input alphabet","Transition function","Initial State","Output Alphabet"],ans:3,exp:"A DFA has 5 components: states, input alphabet, transition function, start state, accept states — no output alphabet."},
+  {q:"Which conversion is not possible algorithmically?",options:["Regular grammar to CFG","NFA to DFA","Non-deterministic PDA to deterministic PDA","Non-deterministic TM to deterministic TM"],ans:2,exp:"NPDAs are more powerful than DPDAs — there's no algorithm to convert every NPDA to an equivalent DPDA."},
+  {q:"Regular expression for all strings starting with 'ab' and ending with 'bba' is?",options:["aba*b*bba","ab(ab)*bba","ab(a+b)*bba","All of the mentioned"],ans:2,exp:"ab(a+b)*bba: starts with 'ab', any combination of a's and b's in between, ends with 'bba'."},
+  {q:"Pumping lemma is generally used for proving that?",options:["Given grammar is regular","Given grammar is not regular","Two regular expressions are equivalent","None of these"],ans:1,exp:"The pumping lemma is used as a proof technique to show that a language is NOT regular."},
+  {q:"Consider regular language L=(11)*. Minimum states in any DFA accepting L?",options:["1","2","3","4"],ans:1,exp:"The language consists of strings of even length. A DFA needs exactly 2 states: even (accepting) and odd (rejecting)."},
+  {q:"If regular language L is closed under halving, then?",options:["1/4 L will be regular","1/2 L will be regular","1/8 L will be regular","All of the mentioned"],ans:3,exp:"Regular languages are closed under halving, and by repeated application, all fractional halvings are regular."},
+  {q:"Which cannot be accepted by a regular grammar?",options:["Set of numbers divisible by 2","Set of binary complement","Strings with odd number of 0","Set of 0^n 1^n"],ans:3,exp:"0^n 1^n requires matching counts of 0s and 1s, which needs a stack — it's context-free, not regular."},
+  {q:"If L1 and L2 are context-free languages, which is context-free?",options:["L1*","L2∪L1","L1·L2","All of the mentioned"],ans:3,exp:"CFLs are closed under union, concatenation, and Kleene star — all results are context-free."},
+  {q:"Grammar with productions S→aab, S→aS|bac|aB, S→abb|ab, Sa→bdb. This grammar is?",options:["Context free","Regular","Context sensitive","Type 0"],ans:3,exp:"The production Sa→bdb has multiple symbols on the left side with no restriction, making it Type 0 (unrestricted)."},
+  {q:"The language accepted by Linear Bounded Automaton is?",options:["Recursive Language","Context free language","Context Sensitive Language","All of the mentioned"],ans:2,exp:"Linear Bounded Automata accept exactly the class of context-sensitive languages."},
+  {q:"The Chomsky hierarchy classifies formal languages into how many levels?",options:["2", "3", "4", "s 43"],ans:2,exp:"Chomsky hierarchy has 4 levels: Type 0 (unrestricted), Type 1 (context-sensitive), Type 2 (context-free), Type 3 (regular)."},
+  {q:"A finite automaton requires minimum how many stacks?",options:["1","0","2","None of the mentioned"],ans:1,exp:"A finite automaton has no stack — it uses only a finite set of states and transitions. Zero stacks needed."},
+  {q:"The Grammar G=(V,Σ,P,S). What does S represent?",options:["Accepting State","Starting Variable","Sensitive Grammar","None of these"],ans:1,exp:"In a grammar definition, S represents the Start Symbol (Starting Variable) from which derivations begin."},
+  {q:"The closure property of context-free grammar includes?",options:["Kleene star","Concatenation","Union","All of the mentioned"],ans:3,exp:"CFGs are closed under Kleene star, concatenation, and union operations."},
+  {q:"A multitape Turing machine is ___ powerful than a single tape Turing machine?",options:["More","Less","Equal","None of the mentioned"],ans:2,exp:"Multitape and single-tape TMs are equally powerful — any multitape TM can be simulated by a single-tape TM."},
+  {q:"A Turing machine that can simulate other Turing machines is called?",options:["Nested Turing machine","Universal Turing machine","Counter machine","None of the mentioned"],ans:1,exp:"A Universal Turing Machine can simulate any other TM given its description and input on its tape."},
+  {q:"Which statement is FALSE?<br>a) Recursive ⊂ RE<br>b) RE may not be recursive<br>c) Recursive may not be RE",options:["Every recursive language is RE","RE language may not be recursive","Recursive languages may not be RE","None of the mentioned"],ans:2,exp:"Every recursive language IS recursively enumerable. The false statement is that recursive may not be RE."},
+  {q:"If L is a recursive language, L' (complement) is?",options:["Recursive","Recursively Enumerable","Recursive and RE","None of the mentioned"],ans:0,exp:"Recursive languages are closed under complementation — if L is recursive, its complement L' is also recursive."},
+  {q:"Which is NOT a component of a formal language?",options:["Alphabet","Syntax","Semantics","Compiler"],ans:3,exp:"A formal language consists of alphabet, syntax (grammar rules), and semantics. A compiler is a tool, not a component."},
+  {q:"Which type of automaton recognizes regular languages?",options:["Pushdown automaton","Finite automaton","Turing machine","Linear-bounded automaton"],ans:1,exp:"Finite automata (DFA/NFA) recognize exactly the class of regular languages."},
+  {q:"Which type of automaton has both a finite control unit and an unbounded tape?",options:["Finite automaton","Pushdown automaton","Turing machine","Mealy machine"],ans:2,exp:"A Turing machine has a finite control unit and an infinite (unbounded) tape for reading and writing."},
+  {q:"The language accepted by a Turing machine with a halting state is?",options:["Regular language","Context-free language","Context-sensitive language","Recursive enumerable language"],ans:3,exp:"Languages accepted by Turing machines (that may or may not halt on all inputs) are recursively enumerable."},
+  {q:"Which type of automaton is strictly more powerful in its non-deterministic version than its deterministic version?",options:["Finite automaton","Pushdown automaton","Turing machine","Linear-bounded automaton"],ans:1,exp:"Non-deterministic PDAs can recognize all context-free languages, while deterministic PDAs can only recognize a subset (deterministic context-free languages)."},
+  {q:"Which is true about regular languages?",options:["Can be recognized by a finite automaton","Can be recognized by a pushdown automaton","Can be recognized by a Turing machine","All of the above"],ans:3,exp:"Regular languages can be recognized by FA, PDA, and TM — each higher-level machine can recognize lower-level languages."},
+  {q:"The Chomsky Normal Form (CNF) for CFG requires productions of the form?",options:["All rules are A→Ab","Start symbol on left-hand side","No ε-productions","All rules have at most two non-terminals on RHS"],ans:3,exp:"CNF requires productions in the form A→BC (two non-terminals) or A→a (single terminal)."},
+  {q:"Regular expression for language over {a,b} starting with a and ending with b is?",options:["a(a+b)*b","a*b*","(a+b)*ab","a(a+b)*a"],ans:0,exp:"a(a+b)*b enforces starting with a and ending with b."},
+  {q:"Which automaton is used in lexical analysis for tokenizing source code?",options:["Finite automaton","Pushdown automaton","Turing machine","Linear-bounded automaton"],ans:0,exp:"Lexical analyzers use finite automata to recognize tokens (identifiers, keywords, etc.) defined by regular expressions."},
+  {q:"A language for which no DFA exists is?",options:["Regular Language","Non-Regular Language","May be Regular","Cannot be said"],ans:1,exp:"If no DFA can recognize a language, it is by definition non-regular."},
+  {q:"Regular expression for all strings starting with 'ab' and ending with 'bba' is? (repeated from different paper)",options:["aba*b*bba","ab(ab)*bba","ab(a+b)*bba","All of the mentioned"],ans:2,exp:"ab(a+b)*bba correctly matches strings starting with ab, having any middle characters, and ending with bba."},
+  {q:"Consider the following statements about NFA to DFA conversion:<br>Statement 1: Initial State of NFA is Initial State of DFA.<br>Statement 2: Final state of DFA is every combination of final state of NFA.",options:["S1 true, S2 true","S1 true, S2 false","S1 can be true, S2 true","S1 false, S2 false"],ans:1,exp:"S1 is true (NFA start state becomes DFA start). S2 is false — DFA final states are any set containing an NFA final state."},
+  {q:"Which strings will NOT be accepted by a DFA that accepts strings with specific pattern?",options:["ababaabaa","abbbaa","abbbaabb","abbaabbaa"],ans:2,exp:"abbbaabb does not match the pattern defined by the given DFA's transition function.",img:"images/ccw4_p5_img1.jpeg"},
+  {q:"Can a DFA recognize a palindrome?",options:["Yes","No","Yes, with input alphabet as Σ*","Can't be determined"],ans:1,exp:"Palindromes require memory proportional to input length to compare characters — DFAs have finite memory."},
+  {q:"Which statement is correct about regular and context-free grammars?",options:["All regular grammars are CFG but not vice versa","All CFG are regular but not vice versa","Regular and CFG are the same","None of the mentioned"],ans:0,exp:"Regular languages are a proper subset of context-free languages — every regular grammar is a CFG."},
+  {q:"If A→xBz and B→y, the simplified grammar would be?",options:["A→xyz","A→xBz|xyz","A→xBz|B|y","None of the mentioned"],ans:1,exp:"Substituting B→y into A→xBz gives A→xyz, but we keep original A→xBz too, giving A→xBz|xyz."},
+  {q:"Grammar G: S→AS, S→AAS, A→SA, A→aa. Which productions deny Chomsky Normal Form?",options:["2, 4","1, 3","1, 2, 3, 4","2, 3, 4"],ans:0,exp:"CNF requires A→BC or A→a. S→AAS has 3 non-terminals (violates CNF), A→SA is fine, A→aa has 2 terminals."},
+  {q:"If a regular language is finite and its longest string has length x, what is its minimum pumping length?",options:["x+1","x","x-1","x²"],ans:0,exp:"The pumping length must be strictly greater than the length of any string in a finite language, making it x+1."},
+  {q:"The language of balanced parentheses is?",options:["Regular","Non-regular","May be regular","None of the mentioned"],ans:1,exp:"Balanced parentheses require matching counts, which needs a stack — it's context-free, not regular."},
+  {q:"Which problems are unsolvable?",options:["Halting problem","Boolean Satisfiability","Halting problem & Boolean Satisfiability","None of the mentioned"],ans:0,exp:"The Halting Problem is undecidable (unsolvable). Boolean SAT is decidable but NP-complete."},
+  {q:"A language L is said to be ___ if there is a TM M such that L(M)=L and M halts on every input?",options:["Turing acceptable","Decidable","Undecidable","None of the mentioned"],ans:1,exp:"A decidable (recursive) language has a TM that always halts — accepting if in L, rejecting if not."},
+  {q:"The regular expression denoting the set of all strings NOT containing two consecutive 0's is given by",options:["(0+10)*","(0+10)*(e+1)","(1+01)*(e+0)","(e+0)(101)*(e+0)"],ans:2,exp:"The expression (1+01)*(e+0) allows any combination of 1s and 01s, ending optionally with a 0, preventing consecutive 0s."},
+  {q:"The minimal FA accepting the set of all strings over alphabets {0,1} that have three consecutive 0's has",options:["4 states","5 states","6 states","None"],ans:0,exp:"To detect '000', a DFA requires 4 states: initial, seen one 0, seen two 0s, and the final accepting state."},
+  {q:"Which of the following grammars are equivalent? i) S-> AB, A->aNa, B->b  ii) S-> a A, A-> bB, A-> a /b",options:["(i) & (ii)","(i) & (iii)","(ii) & (iii)","(i), (ii), & (iv)"],ans:1,exp:"Equivalent grammars generate the exact same language, achieved by substituting rules."},
+  {q:"The class of NP problems is NOT closed with respect to operator",options:["Union","Intersection","Kleen Closure","Compliment"],ans:3,exp:"The class NP is not known to be closed under complementation (this is the NP vs Co-NP problem)."},
+  {q:"Consider the following two languages - L1 : {1n0n1n0n | n>=0} L2 : {anbk | n<=k<=2n} Which of the following statement is True",options:["Both L1 and L2 are Context Free","L1 is Context Free but not L2","L2 is Context Free but not L1","Neither L1 nor L2 is Context Free"],ans:2,exp:"L1 requires matching four blocks, which a PDA cannot do. L2 can be recognized by a PDA guessing the number of b's."},
+  {q:"A type 0 or unrestricted grammar",options:["Generates all the sets that are accepted by Halting Turing Machines","Generates all the sets accepted by the class of Turing Machines","Generates sets that are not regular languages","None of these"],ans:1,exp:"Type-0 grammars exactly generate the class of Recursively Enumerable languages, recognized by standard Turing Machines."},
+  {q:"Which of the following statement is True?",options:["Every Regular Grammar is CFG","Every CFG is Regular Grammar","Every CSG is CFG","None of these"],ans:0,exp:"According to the Chomsky Hierarchy, regular languages (Type 3) are a strict subset of context-free languages (Type 2)."},
+  {q:"The Tree which represents the derivations in a CFG is called",options:["Parse tree","Derivation Tree","Both (a) and (b)","None"],ans:2,exp:"Parse tree and derivation tree are synonymous terms for representing the syntactic structure of a string."},
+  {q:"If you consider a regular expression r, in which r = (11 + 111)* over {0, 1}, then the number of states in minimal DFA and NFA respectively are:",options:["DFA -4, NFA - 4","DFA - 3, NFA - 3","DFA - 3, NFA - 4","DFA - 4, NFA - 3"],ans:1,exp:"The expression requires counting modulo 2 and 3 combinations, yielding minimal states of 3 for both DFA and NFA."},
+  {q:"When L and L' happen to be recursively enumerable, here L is:",options:["context-free","regular","recursive","context-sensitive"],ans:2,exp:"By Post's Theorem, if both a language and its complement are Recursively Enumerable (Turing Recognizable), the language is Recursive (Decidable)."},
+  {q:"The number of elements present in the e-closure(f2) in the given diagram:",options:["0","1","2","3"],ans:3,exp:"The ε-closure includes the state itself plus all states reachable via ε-transitions, giving 3 elements in this case.",img:"images/ccw5_p7_img1.jpeg"}
+];
+
+// APP LOGIC
+const SUBJECTS = [
+  { id:'dsa', name:'Data Structures & Algorithms', icon:'🔗', desc:'Arrays, Trees, Graphs, Sorting & Searching', color:'#6366f1', questions: DSA_QUESTIONS },
+  { id:'os', name:'Operating Systems', icon:'⚙️', desc:'Scheduling, Memory, Deadlocks & Synchronization', color:'#8b5cf6', questions: OS_QUESTIONS },
+  { id:'coa', name:'Computer Organization', icon:'🖥️', desc:'Pipelining, Cache, Addressing & Architecture', color:'#3b82f6', questions: COA_QUESTIONS },
+  { id:'dbms', name:'Database Management Systems', icon:'🗄️', desc:'SQL, Normalization, Transactions & Indexing', color:'#10b981', questions: DBMS_QUESTIONS },
+  { id:'flat', name:'Formal Languages & Automata', icon:'🤖', desc:'DFA, NFA, CFG, Turing Machines & Grammars', color:'#f59e0b', questions: FLAT_QUESTIONS }
+];
+
+let currentSubject = null, currentQ = 0, selectedOpt = -1, isLocked = false, totalQ = 50, isMixedExam = false;
+let shuffledQuestions = [], shuffledOptions = [], userAnswers = [], mistakes = [];
+
+function init() {
+  const grid = document.getElementById('subjects-grid');
+  grid.innerHTML = '';
+  SUBJECTS.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'subject-card';
+    card.style.setProperty('--card-accent', s.color + '22');
+    card.innerHTML = `
+      <div class="card-icon" style="background:${s.color}22;color:${s.color}">${s.icon}</div>
+      <div class="card-title">${s.name}</div>
+      <div class="card-desc">${s.desc}</div>
+      <div class="card-meta"><span>50 Questions Total</span><span>MCQ</span></div>
+      <div class="mode-btns">
+        <button class="mode-btn" onclick="startQuiz(${i}, 10)">10 Qs</button>
+        <button class="mode-btn" onclick="startQuiz(${i}, 30)">30 Qs</button>
+        <button class="mode-btn" onclick="startQuiz(${i}, 50)">All 50</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  // Mixed Exam Card
+  const examCard = document.createElement('div');
+  examCard.className = 'exam-card';
+  examCard.onclick = () => startMixedExam();
+  examCard.innerHTML = `
+    <div class="exam-card-inner">
+      <div class="exam-card-icon">📝</div>
+      <div class="exam-card-content">
+        <div class="exam-card-title">Mixed Exam Mode</div>
+        <div class="exam-card-desc">Simulates the actual CCW exam — 50 random questions, 10 from each subject. Different every time.</div>
+        <div class="exam-card-tags">
+          <span>🔗 DSA ×10</span><span>⚙️ OS ×10</span><span>🖥️ COA ×10</span><span>🗄️ DBMS ×10</span><span>🤖 FLAT ×10</span>
+        </div>
+      </div>
+      <div class="exam-pulse"></div>
+    </div>`;
+  grid.appendChild(examCard);
+}
+
+function startQuiz(idx, numQ = 50) {
+  currentSubject = SUBJECTS[idx];
+  currentQ = 0; selectedOpt = -1; isLocked = false; isMixedExam = false; totalQ = numQ;
+  userAnswers = []; mistakes = [];
+  shuffledQuestions = [...currentSubject.questions].sort(() => Math.random() - 0.5).slice(0, numQ);
+  document.getElementById('dashboard-view').style.display = 'none';
+  document.getElementById('results-view').style.display = 'none';
+  document.getElementById('review-view').style.display = 'none';
+  document.getElementById('quiz-view').style.display = 'block';
+  document.getElementById('quiz-subject').textContent = currentSubject.name;
+  renderQuestion();
+}
+
+function startMixedExam() {
+  isMixedExam = true; totalQ = 50;
+  currentSubject = { id:'mixed', name:'Mixed Exam Mode', icon:'📝', color:'#f43f5e' };
+  currentQ = 0; selectedOpt = -1; isLocked = false;
+  userAnswers = []; mistakes = [];
+  // Pick 10 random from each subject — keep in subject order like actual exam
+  shuffledQuestions = [];
+  const subjectColors = { 0:'#6366f1', 1:'#8b5cf6', 2:'#3b82f6', 3:'#10b981', 4:'#f59e0b' };
+  const subjectNames = ['DSA','OS','COA','DBMS','FLAT'];
+  SUBJECTS.forEach((s, si) => {
+    const pool = [...s.questions].sort(() => Math.random() - 0.5).slice(0, 10);
+    pool.forEach(q => {
+      q._subjectTag = subjectNames[si];
+      q._subjectColor = subjectColors[si];
+    });
+    shuffledQuestions.push(...pool);
+  });
+  // NO final shuffle — questions stay grouped: 10 DSA, 10 OS, 10 COA, 10 DBMS, 10 FLAT
+  document.getElementById('dashboard-view').style.display = 'none';
+  document.getElementById('results-view').style.display = 'none';
+  document.getElementById('review-view').style.display = 'none';
+  document.getElementById('quiz-view').style.display = 'block';
+  document.getElementById('quiz-subject').textContent = '📝 Mixed Exam Mode';
+  renderQuestion();
+}
+
+function shuffleArray(arr) {
+  const a = arr.map((v, i) => ({ v, i }));
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderQuestion() {
+  const q = shuffledQuestions[currentQ];
+  const pct = ((currentQ) / totalQ) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `Question ${currentQ + 1} / ${totalQ}`;
+  
+  shuffledOptions = shuffleArray(q.options);
+  selectedOpt = -1; isLocked = false;
+  
+  const card = document.getElementById('question-card');
+  const letters = ['A', 'B', 'C', 'D'];
+  let diagramHTML = '';
+  if (q.img) {
+    diagramHTML = `
+      <img src="${q.img}" alt="Question diagram" class="question-diagram" onclick="openDiagram(this.src)">
+      <div class="diagram-label">📎 Reference diagram — click to enlarge</div>`;
+  }
+  let subjectTag = '';
+  if (isMixedExam && q._subjectTag) {
+    subjectTag = `<span class="q-subject-tag" style="background:${q._subjectColor}22;color:${q._subjectColor}">${q._subjectTag}</span>`;
+  }
+  card.innerHTML = `
+    <div class="q-number">Question ${currentQ + 1}${subjectTag}</div>
+    <div class="q-text">${q.q}</div>
+    ${diagramHTML}
+    <div class="options-list">
+      ${shuffledOptions.map((o, i) => `
+        <button class="option-btn" id="opt-${i}" onclick="selectOption(${i})">
+          <span class="opt-letter">${letters[i]}</span>
+          <span class="opt-text">${o.v}</span>
+        </button>`).join('')}
+    </div>`;
+  
+  document.getElementById('explanation-box').innerHTML = '';
+  const btn = document.getElementById('action-btn');
+  btn.textContent = 'Lock Answer';
+  btn.className = 'action-btn lock-btn';
+  btn.disabled = true;
+}
+
+function openDiagram(src) {
+  const modal = document.createElement('div');
+  modal.className = 'diagram-modal';
+  modal.innerHTML = `<img src="${src}" alt="Enlarged diagram">`;
+  modal.onclick = () => modal.remove();
+  document.body.appendChild(modal);
+}
+
+function selectOption(i) {
+  if (isLocked) return;
+  selectedOpt = i;
+  document.querySelectorAll('.option-btn').forEach((b, idx) => {
+    b.classList.toggle('selected', idx === i);
+  });
+  document.getElementById('action-btn').disabled = false;
+}
+
+function handleAction() {
+  if (!isLocked) {
+    lockAnswer();
+  } else {
+    nextQuestion();
+  }
+}
+
+function lockAnswer() {
+  isLocked = true;
+  const q = shuffledQuestions[currentQ];
+  const correctOrigIdx = q.ans;
+  // Find which shuffled index corresponds to the correct answer
+  const correctShuffledIdx = shuffledOptions.findIndex(o => o.i === correctOrigIdx);
+  const userOrigIdx = shuffledOptions[selectedOpt].i;
+  const isCorrect = userOrigIdx === correctOrigIdx;
+  
+  userAnswers.push({ qIdx: currentQ, userAns: userOrigIdx, correct: isCorrect });
+  
+  if (!isCorrect) {
+    mistakes.push({
+      q: q.q,
+      yourAns: q.options[userOrigIdx],
+      correctAns: q.options[correctOrigIdx],
+      exp: q.exp
+    });
+  }
+
+  document.querySelectorAll('.option-btn').forEach((b, idx) => {
+    b.classList.add('locked');
+    if (idx === correctShuffledIdx) b.classList.add('correct');
+    if (idx === selectedOpt && !isCorrect) b.classList.add('wrong');
+  });
+
+  document.getElementById('explanation-box').innerHTML = `
+    <div class="explanation"><strong>Explanation:</strong> ${q.exp}</div>`;
+  
+  const btn = document.getElementById('action-btn');
+  btn.textContent = currentQ < (totalQ - 1) ? 'Next Question →' : 'View Results';
+  btn.className = 'action-btn next-btn';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= totalQ) {
+    showResults();
+  } else {
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('results-view').style.display = 'block';
+  
+  const score = userAnswers.filter(a => a.correct).length;
+  const wrong = totalQ - score;
+  const pct = (score / totalQ) * 100;
+  const deg = (pct / 100) * 360;
+  const color = pct >= 70 ? '#10b981' : pct >= 40 ? '#f59e0b' : '#f43f5e';
+  
+  document.getElementById('result-subject-title').textContent = currentSubject.name;
+  document.querySelector('.score-label').textContent = `out of ${totalQ}`;
+  
+  const circle = document.getElementById('score-circle');
+  circle.style.setProperty('--score-color', color);
+  // Animate the score
+  setTimeout(() => circle.style.setProperty('--score-deg', deg + 'deg'), 100);
+  
+  const sv = document.getElementById('score-value');
+  sv.style.color = color;
+  // Animate count
+  let count = 0;
+  const interval = setInterval(() => {
+    count++;
+    sv.textContent = count;
+    if (count >= score) clearInterval(interval);
+  }, 30);
+  
+  document.getElementById('stat-correct').textContent = `✓ ${score} Correct`;
+  document.getElementById('stat-wrong').textContent = `✗ ${wrong} Wrong`;
+  
+  const mistakesCard = document.getElementById('mistakes-card');
+  const mistakesList = document.getElementById('mistakes-list');
+  if (mistakes.length > 0) {
+    mistakesCard.style.display = 'block';
+    mistakesList.innerHTML = mistakes.map((m, i) => `
+      <div class="mistake-item">
+        <div class="mistake-q">${i + 1}. ${m.q}</div>
+        <div class="mistake-detail">
+          <span class="mistake-your">Your answer: ${m.yourAns}</span>
+          <span class="mistake-correct">Correct answer: ${m.correctAns}</span>
+          <span class="mistake-exp">${m.exp}</span>
+        </div>
+      </div>`).join('');
+  } else {
+    mistakesCard.style.display = 'none';
+  }
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+function startReview() {
+  document.getElementById('dashboard-view').style.display = 'none';
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('results-view').style.display = 'none';
+  document.getElementById('review-view').style.display = 'none';
+  document.getElementById('review-view').style.display = 'block';
+  
+  const list = document.getElementById('review-list');
+  let html = '';
+  const letters = ['A','B','C','D'];
+  SUBJECTS.forEach(s => {
+    html += `<h3 style="margin: 30px 0 15px; color: ${s.color}; border-bottom: 1px solid ${s.color}44; padding-bottom: 8px;">${s.name} (60 Questions)</h3>`;
+    s.questions.forEach((q, i) => {
+      html += `
+        <div class="review-q-card">
+          <div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 12px;">Q${i+1}. ${q.q}</div>
+          ${q.options.map((opt, idx) => `
+            <div class="review-opt ${idx === q.ans ? 'correct' : ''}">
+              <strong>${letters[idx]}.</strong> ${opt} ${idx === q.ans ? ' ✓' : ''}
+            </div>
+          `).join('')}
+          <div class="review-exp"><strong>Explanation:</strong> ${q.exp}</div>
+        </div>
+      `;
+    });
+  });
+  list.innerHTML = html;
+  window.scrollTo(0,0);
+}
+
+function goHome() {
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('results-view').style.display = 'none';
+  document.getElementById('review-view').style.display = 'none';
+  document.getElementById('dashboard-view').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+init();
+
+</script>
+</body>
+</html>
