@@ -1,0 +1,345 @@
+=== ccw5.pdf (7 pages) ===
+
+--- Page 1 ---
+q
+F 0500csr308052202
+RegNo.:
+APJ ABDUL KALAM TECHNOLOGICAL
+Sixth Semester B.Tech Degree Examination June 2022 (201 Sc
+Course Code: CST308
+Course name: COMPREIIENSM COURSE WORK
+Max. Marks: 50 Duration: lHour
+Instructions:
+(1) Each qaestion carries one mark. No negative marks for wrong answers
+(2) Total number of questions: 50
+@ AA questions are to be onswered. Each question will befollowed by 4 possible answers of
+i\-/
+which only ONE is correct.
+(4) If more than one option is chosen, it will not be consideredfor voluotion.
+l.
+The Inorderand Preordertraversal ofabinarytree is d b e a f c g and a b d e c f g respectively. Which
+among the following is the correct Post Order Traversal Sequence for this tree?
+a) debfgca b) edbgfca c) edbfgca d) defgbca
+2.
+Which of the following is not the application of stack?
+a) A parenthesis b) Tracking of local c) Compiler Syntax d) Data Transfer
+program run Analyzer
+balancing variables at between two
+time
+asynchronous
+processes
+3.
+In the worst case, the number of comparisons needed to search a singly linked list of length n for a
+given element is?
+a) log2 n b)% c) log2 n- | d)n
+4.
+To implement a stack using queue (with only enqueue and dequeue operations), how many queues
+will you need?
+a)l :: b)2 c) J a d)4
+5.
+The optimal data structure used to solve Tower of Hanoi is
+a) b) queue d)
+Tree Heap -*) Priority Stack
+6. Assume that the operators *, -, X are left associative and ^ is right associative. The order of
+precedence (from highest to lowest) is ^, X, +, -. The postfix expression for the infix expression
+a+bXc-d^e^fis?
+a) abc Xl"def ^^ - b) abc X+ de^f^ - c) ab+c Xd - e ^f d) ) -+aXbc^ ^def
+7.
+The time complexity of heap sort in worst case is
+a) b) c) d)
+O(logn) o(n) O(nlogn) O(n')
+Page 1 of 7
+
+--- Page 2 ---
+0600csT3080s2202
+8'
+Suppose we are sorting an aftay of eight integers using heapsort, and we have just finished some
+heapiff (either maxheapify or qrinheapify) operations. The array now looks like this:
+t6 t4 t5 t0 1227 28
+How many heapifu operations have been performed on root of heap?
+a) 1 q z c) 3or4 d)
+5o16
+9.
+what is the number of edges present in a complete graph having n vertices?
+a) (n*(n+1))/2 b) (n*(n-l))/2 c) n d)
+Information given
+l0' is insufficient
+If several elements are competing forthe same bucket in the hash table, what is it called?
+a) Diffirsion b) Replication c) collision d)
+Duplication
+11
+A process which is copied from main memory to secondary memory on the basis of requirement is
+known as
+'f a) Demand paging b) paging c) Threads d) Segmentation \r'
+12
+For which of the following purposes, Banker's algorithm is used?
+a) P de re a v d e lo n c ti k n g b) solving deadlock c) Recover from d) None
+deadlock
+l3
+Identifu the system calls tlat on termination does not return control to the calling point.
+a) exec b) fork c) longimp d)
+ioctl
+14
+A cPU generates 32-bitvirtual addresses. The page size is 4 KB. The processor has a translation look-
+aside buffer (TLB) which can hold a total o1 1)3-page table entrie, und i, 4-way set associative. The
+minimum size of the TLB tag is i
+1
+a) I I bits b) 13 bits c) 15 bits d) 20 bits
+15
+Dirty bit is used to indicate which of the following?
+a) A o c pa c g u e r fa r u e lt d h as b) A co m pa r g p e te h d a d s a ta c) A m o p d a i g fi e e d h a a s f b te ee r n d) o A f n p i a ll g e e gal access
+into \:r'
+being loaded
+16
+A system uses FIFO policy for page replacemenl - ,", ;;" frames with no pages l6aded to begin
+with. The system first accesses 100 distin"t puffi in some order and then accesses the same 100
+pages but now in the reverse order. How many page faults will occur?
+a) 196 b) rs2 c) rs7 d)
+l9s
+17
+If a process is executing in its critical section, then no other processes can be executine in their
+critical Section. What is this condition called?
+a) mutual exclusion b) critical exclusion c) synchronous d)
+asynchronous
+exclusion
+exclusion
+Page 2 of 7
+
+--- Page 3 ---
+0600csT308052202
+10o
+I What is a long-term scheduler?
+t
+a) It selects processes b) It selects processes c) It selects d) None of the
+which have to be which have to be processes which mentioned
+brought into the executed next and h"uu" to remove
+ready queue allocates CpU from memory by
+swapping
+19
+A systematic procedure for moving the cpu to new process is known as-
+a) Synchronization b) Deadlock c) Starvation d)
+context
+Switching
+20
+In a virtual memory system, size of virtual address is 32-bit, size of physical address is 30--bit, page
+size is 4 Kbyte and size of each page table entry is 32-bit. The main memory is byte addressabie.
+Which one of the following is the maximum number of bits that can be used for storing protection and
+other information in each page table entry?
+a)2 b) l0 c) d)
+12 14
+2l
+The amount of RoM needed to implement a 4-bit multiplier is
+a) 64 bits b) 128 bits c) I Kbits d) 2 Kbits
+22
+Match the followins
+(a) Immediate address mode (l) Local variables
+(b) Direct address mode (2) Relocatable programs
+(c) Indirect address mode (3) pointer
+(d) Index addressing mode (4) Locality of reference
+(e) Base address mode (5) Arrays
+(f) mode
+Relative address (6) Constant Operands
+a) a6 bl c3 d5 e2 f4 b) a5 b4 c6 d3 el D c) a3 b5 c2 d4 et f2 d) a6 b5 c2d3 el f:l
+23
+Register renaming is done in pipelined processors
+a) as an alternative to b) for efficient access c) to handle certain d) as part ofaddress
+register allocation ' to function kinds ofhazards translation
+at compile time parameters and
+local variables
+;
+24 Memory interleaving is done to
+a) Increase the b) Reduce memory c) Simplifu memory d) Reduce page
+amount of logical access time interfacing faults
+memory
+25
+In an instruction execution pipeline, the earliest that the data TLB (Translation Lookaside Buffer)
+can be accessed is
+a\ beTore effective b) during effective c) after effective d) after data
+calculation calculation
+address address address cache lookup
+started
+has calculation has has completed
+completed
+Page 3 of 7
+
+--- Page 4 ---
+0600csr3080s2202
+26 The correct matching for the following pairs is
+r
+(A) DHA r1o {3.) Hieh sPeed RAH
+(e)
+{B) {ache Disk
+(C) Intenrupt Il0 (:) lri.nten
+(D) {andition Csde Register (4) ALU
+a) A4B3CID2 b) A2BIC3D4 c) A4B3C2Dr d) A2B3C4DI
+27 The technique whereby the DMA controller steals the access cycles of the processor to operate is
+-----
+called
+a) Fast Conning b) Memory Con c) Cycle Stealing d) Memory Stealing
+28 For the daisy chain scheme of connecting VO devices, which of the following statement is true?
+a) It gives non- b) It is only useful for c) It requires a d) [t gives uniform
+uniform priority to connecting slow separate intemrpt priority to all
+various devices devices to a pin on the devices
+processor processor for
+each device
+29 A machine with N different opcodes can contain how many different sequences of micro-operations
+d)N
+a) 2n b) iyttt c) 7112
+30 A cache has a 64 KB capacity, 128 -byte lines (blocks), and is 4 -way set associative. The system
+containing the cache uses 32 -bit addresses. How many lines (blocks) and sets does the cache have?
+a) 64 b) r28 c) 2s6 d) 32
+31 Which of the following is the property of transaction that protects data from system failure?
+a) Atomicity b) Isolation c) Durability d) Consistency
+32 Which normalization form is based on the transitive dependency?
+a) INF b) 2NF c) 3NF d) BCNF
+J a J a Which of the following SQL command is used for removing (or deleting) a relation form the
+database?
+a) Drop b) Delete c) Rollback d) Remove
+34
+Whiih of the ftiilowing is known as minimal super key?
+a) Primary key b) Candidate key c) Foreign key d) None
+" -
+35 ;
+Given the following relation instance.
+xy
+z
+142
+153
+t63
+322
+"
+Which of the following functional dependencies are satisfied by the instance?
+a) xY->zandz-> b) YZ->XandY-> c) YZ->XandX- d) xz->YandY-
+Y Z >Z >X
+36
+Consider the following relational schema:
+Page 4 of 7
+
+--- Page 5 ---
+0600csr3080s2202
+Suppliers(sid:integer, sname:string, city:string, street:string)
+Parts(pid:integer, pnamb:sffing, color:string)
+Catalog(sid integer, pid :integer, cost:real)
+:
+Consider the following relational query on the above database:
+SELECT S.sname
+FROM Suppliers S
+WHERE S.sid NOT IN (SELECT C.sid
+FROM Catalog C
+WHERE C.pid NOT IN (SELECT P.pid
+FROM Parts P
+WHERE P.color+'blue'))
+" , Assume that relations corresponding to the above schema are not empty. Which one of the following
+\...,
+is the correct interpretation of the above query
+a^\t bu)) e a ) \ dvt)
+of of of Find the names of
+Find the names Find the names Find the names
+att supptiers who
+all suppliers who all suppliers who all suppliers who have not supplied
+have. supplied a have not supplied a have supplied only blue parts'
+part. part.
+non-blue non-blue only blue parts.
+37
+An entity in A is associated with at most one entity in B. An entity in B, however, can be associated
+with any number (zero or more) of entities in A.
+a) One-to-many b) One-to-one c) Many-to-many d) Many-to-one
+38
+Which commands are used to control access over objects in relational database?
+r a) CASCADE & b) GRANT & c) QUE & QUIST d) None of these
+MVD
+REVOKE
+39 Consider the ORACLE relationships below:One (x, y) = {<2,5), (1, 6>, <1, 6),11, 6t,14,8t,14,
+"< 8>) Twa(x,y)= {<2,55>,(1, 1), 14,4},<1,6>,(4,8), (4,8}, 19,9},<1,6>}.Considerthe
+;
+following SQL queries, SQI and SQ2, respectively:
+'
+*
+SQl : SELECT + FROM One)
+EXCEPT
+*
+(SELECT FROM Two);
+*
+SQ2 : SELECT FROM One)
+EXCEPT ALL
+*
+(SELECT FROM Two);
+What is the cardinality of the result generated on the execution of each SQL query on the instances
+above?
+a) 2andl, b) land2, c) 2and2, d) landl,
+respectively respectively respectively
+respectively
+40
+Which of the following is TRUE?
+Page 5 of 7
+
+--- Page 6 ---
+TV
+o€utcst308052202
+a) in c) d)
+Every relation in b) A relation R is Every relation in No relation can
+non-
+3NF is also in 3NF if every BCNF is also in be in both BCNF
+I of
+BCNF prime attribute 3NF and 3NF
+R is fully
+functionally
+dependent on
+every key ofR
+4l A Language forwhich no DFA exist is a
+a) Regular Language b) Non-Regular c) May be Regular d) Cannot be said
+Language
+a)r b) c) d)
+110r0 l0O0l0l0 String of letter
+count 1l
+43
+Regular expression for all strings starts with ab and ends with bba is.
+a) b) c) d)
+aba*b*bba ab(ab)*bba ab(a+b)*bba All ofthe
+mentioned
+44
+Which ofthe following options is correct?
+Statement l: Initial State ofNFA is Initial State of DFA.
+Statement 2: The final state of DFA will be every combination of final state ofNFA.
+a) Statement I is true b) Statement I is true c) Statement I can d) Statement I is
+and Statement 2 is and Statemgnt 2 is be true and ' false and
+false --<
+true Statement 2 is Statement 2 is
+true also false
+45
+The number of elements present in the e-closure(f2) in the given diagram:
+Page 6 of7
+
+--- Page 7 ---
+0500csfit08052202
+v a)0 b)l c)2 d)3
+46
+The language accepted by push down Automaton:
+a) Recursive b) Context free c) Linearly Bounded d) All ofthe
+47 Language language language mentioned
+Given grammar G:
+(1)S->AS
+(2)S->AAS
+(3)A->SA.
+(4)A->aa
+which of the following productions denies the format of chomsky Normal Form?
+a) 2,4 b) 1,3 c) 1,2,3,4 d)
+2,3,4
+48 Which ofthe problems are unsolvable?
+a) Harting probrem b) c) d)
+3i?iilt'* Halting problem None ofthe
+& Boolean mentioned
+problem Satisfiability
+v problem
+49 Given Grammar: S->A, A->aA, A-)e, B->bA
+which among the-sllowin 'b g )p roductions are useless productions?
+a) s->A A.>aA tl A->e d)
+B->bA
+50
+The production of the form A->B , where A and B are non-terminals is called r
+a) Null production b) Unit proauctif c) Greibach Normal d) Chomsky Normal
+Form
+Form
+*****
+PageT ot7
+

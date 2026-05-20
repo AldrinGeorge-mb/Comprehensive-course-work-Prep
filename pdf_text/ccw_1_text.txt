@@ -1,0 +1,336 @@
+=== ccw 1.pdf (6 pages) ===
+
+--- Page 1 ---
+I
+F
+1100csr308052302
+Reg No.:
+APJ ABDUL KALAMTECHNOLOGICAL UNIVE
+B.Tech Degree 56 (R, S) / 56 (PT) (R) Examination June 2023 (2019
+Course Code: CST 308
+Course name: COMPREHENSIVE COURSE WORK
+Max. Marks:50 Duration: lHour
+Instructions: (I) Eoch question carries one mark No negative morksfor wrong answers
+(2) Totol number of questions: 50
+(3) AII questions are to be qnswered. Each question will be followed by I possible answers of
+which only ONE is correct-
+(1) If more than one option is chosen, it will not be considered for vsluation-
+l.
+The worst case complexity of quick sort is
+a) o(n) b) o(log n) c) O(nt ) d) O(n log n)
+2.
+What is the output of following function for start pointing to first node of following linked
+list? l->2->3->4->5->6
+void fun(stnrct node+ start)
+{
+if(start - NULL)
+renlrn;
+printf("%d ", start->data);
+if(start->next !: NULL )
+fun( start->next->next) ;
+printf( "Yod ", start->data) ;
+)
+a) 146641 b) 135135 c) t23s d) 13ss3l
+3. "The prefix form of A-B/ (C * D n E) is? j I
+a) -/*AACBDE b) -ABCD*ADE c) -AIB*CADE d) -AIBC*ADE
+4. Suppose we are sorting an ruray of eight integers using quicksort, and we have just finished
+the first partitioning with the array looking like this:
+25179121110
+Which statement is correct?
+a) The-pivot could b) The pivot could c) The pivot is d) Neither the 7
+7 is but
+be either the be the 7, but it not the 7, nor the 9 is the
+9. 9 be
+or the not the it could Pivot.
+the 9
+5.
+In a complete k-ary tree, every internal node has exactly k children or no child. The
+Page 1 of 5
+
+--- Page 2 ---
+1r00csT308052302
+number of leaves in such a,tree with n internal nodes is:
+a) nk b). (n_l)k+1 c) n(k_t)+l d) n(k_l)
+6'
+If a node in a Binary search tree has two children, then its inorder predecessor has .........
+a) No child b) No left child c) No right d) TWo children
+child
+7. Using Bubble sort, the number of interchanges required to sort S, l, 6,2 and4 in ascending
+order is...........
+a)7b)5c)8d)6
+8. Which one of the following is a sequence container?
+a) stack b) dequeue c) queue d) set
+9. Minimum number of queues needed to implement the priority queue is ...........
+a)l b)2 c)3 d)4
+10. The data structure used in breadth first search algorithm is ...........
+a) queue b) stack c) heap d)
+hashtable
+ll
+Consider three CPU-intensive processes, which require t0, ZO and 30 time units and arrive
+at times 0, 2 and 6 respectively. How many context switches are needed if the operating
+system implements a shortest remaining time first scheduling algorithm? Do not count the
+context switches at time zero and at the end.
+a)l b)2 c)3 d)4
+l2 which of the following are Nor shared by the threads of the same process?
+a) Stack
+b) Registers
+c) Address space
+d) Message queue
+a) aand d b) b and c c) aand b d) a,bandc
+l3 The problem of indefinite blockage of low prioriry jobs in general priority scheduling
+algorithm can be solved using
+a) Swapping b) Dirry Bit c) Aging d) Compaction
+l4 which of the following are the advantage of Murtiprogrammingt
+a) High and b) CPU scheduling is c) memory d) All of the above
+efficient CPU not required management
+utilization
+is good
+It
+A memory management system has 64 pag€s with 512 bytes page size. Physicai memory
+consists of 32 page frames Number of bits required in logical and physical address are
+respectively:
+16 a) 14 and 15 b) 14 and29 c) 15 and t4 d) 16 and32
+Consider the reference string:
+012301401234
+IllIFo
+page replacement algorithm is used, then the number of page faults
+with three page frames and four page frames are _ and _ respictively.
+a) 10,9 b) 9,9 c) t0 d)
+10, 9, l0
+17 Consider a disk queue with I/O requests on the following cylinders in their arriving order:
+6,10,12,54,97,73,128,15,44,110,34,45. The disk head is assumed to be at cylinder 23 and
+moving in the direction of decreasing number of cylinders. Total number of cvlinders in,the
+Page 2 of 6
+
+--- Page 3 ---
+1100csT308052302
+disk is 150. The disk head movement using scAN -scheduling algorithm is:
+a) r72 b) tl3 c) lsl d)
+161
+l8 At a particular time of computation, the value of a counting semaphore is 10. Then 12 p
+operations and "x" V operations were performed on this semaphore. If the final value of
+semaphore is 7, x will be
+a) 8 b)e c)10 d)
+1l
+l9 In the ..... algorithm, the disk head moves from one end to the other, servicing requests
+along the way. When the head reaches the other end, it immediately returns to the
+beginning of the disk without servicing any requests on the return trip.
+a) LOOK b) SCAN c) C-SCAN d)
+C-LOOK
+20 Paging suffers from .............. fragmentation
+2l a) External b) Internal c) physical d) All of the abve
+The main virtue for using single Bus structure is
+a) Fast data b) Cost effective c) Cost d) None of the
+transfers connectivity and effective mentioned
+speed connectivity
+and ease of
+attaching
+peripheral
+devices
+22 Memory Buffer Register (MBR) is connected to _.
+a) Control Bus b) Address Bus c) Data Bus d) System Bus
+23 The basic component of arithmetic circuit is
+a) parallel b) parallel adder. c) half adder. d) full adder.
+subtractor.
+24 When we use auto increment or auto decrements, which of the following is/are true?
+l) In both, the address is used to retrieve the operand and then the address gets altered
+2) In auto increment, the operand is retrieved first and then the address altered
+3) Both of them can be used on general purpose registers as well as memory locations
+a) 1,2,3 b) 2 c) 1,3 d)
+2,3
+25 When we perform subtraction on -7 and -5 the answer in 2's complement form is ....
+a) llll0 b) 1n0 c) d)
+1010 0010
+26 The instruction -> Add LOCA, R0 does
+a) Adds the value b) Adds the valueef c) Adds the d) Adds th ! e value
+of LOCAto R0 R0 to the address values of of LOCA with a
+the LOCA
+and stores in of both LOCA value in
+register
+temp and R0 and accumulator and
+stores rt ln stores it in R0
+RO
+27 Suppose, after analyzing a new cache design, you discover that the cache has far too many
+conflict misses, and this needs to be resolved. You know that you must increase
+associativity in order to decrease the number of cache misses. What are the implications of
+increasing associativity?
+Page 3 of 5
+
+--- Page 4 ---
+1r00csT308052302
+a) Slower cache b) Increase index c) Increase d) All of these
+.
+bits
+access time block size
+28 In a k-way set associative cache, the cache is divided into v sets, each of which consists of
+k lines. The lines of a set are placed in sequence one after another. The lines in set s are
+sequenced before the lines in set (s+l). The main memory blocks are numbered 0 onwards.
+j
+The main memory block numbered must be mapped to any one of the cache lines from.
+AA
+a) (i modv) * kto fi modv) * k+ (k-l)
+b)
+( mod v) to (i mod v) + (k-1)
+:l ( mod k) to ( mod k) + (v-l)
+a)
+( modk) * vto (j modk) * v+(v-1)
+29 Highly encoded schemes that use compact codes to speciS a small number of functions in
+each micro instruction is
+a) b) c) d)
+Horizontal Vertical Diagonal None of the
+organisation organisation organisation mentioned
+30 DMA interface unit eliminates the need to use CPU registers to transfers data from
+a) b) c) d)
+MAR to MBR MBRto MAR VO units to Memory to VO
+memory units
+3l Let El and E2 be two entities in an E/Rdiagram with simple single-valued attributes. Rl
+and R2 are two relationships between El and E2, where Rl is one-to-many and R2 is
+many-to-many. Rl and R2 do not have any attributes of their own. What is the minimum
+number of tables required to represent this situation in the relational model?
+a)2b)3c)4d)s
+32 Consider the join of a relation R with relation S. If R has m tuples and S has n tuples,then
+the maximum size ofjoin is............
+a) b) c) d)
+mn m*n (m+n)12 2(rn+n)
+Ja:J An index record appears for every searchtty value in the file
+a) index b) c) d)
+Dense Sparse index Hash index Single-key
+index
+34 If a relatin is in BCNF Then it is in:
+a) b) c) d)
+2NF 3NF INF lNFand2NF
+35 Which of the followine is a DDL command?
+a) -Select b) c) d)
+Create Insert Delete
+36 The number of attributes in a relation is called its
+a) b) c) d)
+cardinality size schema degree
+37 Consider a database implemented using B+ tree for file indexing and installed on a disk
+drive with block size of 4 KB. The size of search key is 12 bytes and the size of tree/disk
+pointer is 8 bytes. Assume that the database has one million records. Also assume that no
+Page 4 of 6
+
+--- Page 5 ---
+1100csT308052302
+node of the B* tree and no records are present initially in main memory. Consider that each
+record fits into one disk bloch The minimum number of disk accesses required to retrieve
+any record in the database is
+a)rb)2c)3d)4
+38
+Consider the relation R(A,B,C,D,E) and the set p:{AB->CE, E->AB, C->D}.What is the
+highest normal form of this relation?
+a) lNF b) 2NF c) 3NF d)
+BCNF
+39
+What is the Lost Update Problem also known as?
+a) W-W b) W-R c) R-R d)
+None
+Conflict Conflict
+Confli
+ct
+40
+Consider the following transactions with data items P and Q initialized to zero:
+Tl: read (P)
+;
+read (Q)
+;
+ifP:0thenQ::Q+l;
+write (Q)
+;
+T2: read (Q)
+;
+read (P)
+;
+ifQ:0thenP::P+1;
+write (P)
+;
+Any non-serial interleaving of Tl and T2 for concurrent execution leads to
+a) A serializable b) A schedule that is c) A conflict d) A schedule for
+schedule conflict serializable
+not which a
+serializable schedule
+precedence
+t graPh cannot be
+drawn
+4l
+The non- Kleene Star operation accepts the following string of finite length
+:
+over set A {(0,1) [ where string s contains even number of 0 and 1]
+a) 01,0011, b) 0011, 11001100 c) e,0011, d) e,00[,
+r Qlolol 11001100
+1100t100
+42
+which of the following is a not apartof S-trfrle finite automata:
+a) Input alphabet b) Transition c) Initial State d) OutputAlphabet
+function
+43
+which of the following conversion is not possible (algorithmically)?
+a) Regular b) Non Deterministic c) Non d) Non
+grammar to FA to Deterministic Deterministic
+CFG Deterministic FA pDA to TM to
+Deterministic
+Deterministic
+PDA
+TM
+44
+Regular expression for all strings starts with ab and ends with bba is...........
+Page 5 of 6
+
+--- Page 6 ---
+rr00csT308052302
+a)
+aba^*b^*bba
+b) ab(ab)^*bba
+r
+c)
+ab(a+b)^*bba
+d)
+All of the mentioned
+45
+Pumping lemma is generally used for proving that
+a) Given grammar b) Given grammar is c) Whether two d) None of these
+regular regular
+is not given regular
+expressions
+are
+equivalent or
+not
+46
+Consider the regular language L: (l1l+l lll l). . The minimum number of states in any
+DFA accepting this language is
+a) 3 b)s c)8 d)
+s
+47
+Suppose a regular language L is closed under the operation halving, then the result would
+be...........
+a) l/4L will be b) ll2L will be c) llsLwill be d) All of the
+regular regular regular
+mentioned
+48
+which among the following cannot be accepted by a regular grammar?
+a) Lisasetof b) Lisasetofbinary c) Lisasetof d) Lisasetof
+numbers complement with
+string 0 n I n
+divisible by 2 odd number
+of0
+49 Ll
+If andL2 are context free languages, which of the following is context free?
+a) Ll* b) L2IJIL c) Ll.L2 d)
+All of the
+mentioned
+50
+Consider a grammar with the following productions
+S--> aab bac aB
+I
+r S-->aS
+S --> abb ab
+I
+S a --> bdb
+The above grammar is
+a) free b) Regular c) Context d)
+Context
+Type 0
+sensitive
+*'rt * rf *-
+Page 6 of 6
+

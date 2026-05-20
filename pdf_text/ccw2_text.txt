@@ -1,0 +1,320 @@
+=== ccw2.pdf (5 pages) ===
+
+--- Page 1 ---
+ffi
+F o
+1200csT308t2240t
+1
+RegNo.:
+APJ ABDUL KALAM TECHNOLOGICAL UNIVERSITY
+B.Tech Degree s6 (s, FE) / 56 (PT) (S, FE) Examination December2024 Q0l9
+Counte Code: CST 308
+Course name: COMPREHENSM COURSE WORK
+Duration: lHour
+Max. Marks: 50
+Instructions: (I) Eoch question cafiies one mark. No negative marksfor wrong onsu'ers
+(2) Total number of questions: 50
+(3) AU questions are to fu onswered. Eoch question will befollowed by 4 possible
+of
+answerc
+whlch ontY ONE is correct
+(4) If more than one option is chosen, it will not be consideredfor valuation.
+1. The prerequisite of the binary search algorithm is
+a) Array should be b) Array should be c) Array should be d) None ofthese
+arranged
+sorted in randomly sorted in
+descending order ascending order
+2. In a binary heap, what is the time complexity of deleting the maximum element?
+a) o(1) b) o(loe n) c) o(n) d) o(n log n)
+3. How many edges does a complete graph with n vertlces have?
+) a) n(n-l) b) nln-Lll2 c) n^2 d) n^2-n
+4. The data structure used in breadth first search algorithm is
+a) queue b) stack c) heap d) Hash table
+5. what is the amortized time complexity of operations in a dynamic array?
+a) o(1) b) o(log n) ; c) o(n) d) o(n^4
+5. In a max-heap with n elements, where are the leaf nodes stored?
+a) Levels 0 to log n - bl Last level only c) Levels log n to n d) Randomly
+1
+7. A hash table is
+al A structure used b) A structure used for c) A,structure that d) A structure that
+to implement storage maps values to maps keys to
+. queue keYs values
+stack and
+8. In a circular queue implemented with an arftly, how do you determine if the queue is full?
+a) (rear front) b) (rear + 1) % size == c) (rear - front) == d) (front + size) %
+== front size rear == 1
+Page 1 of 5
+F
+
+--- Page 2 ---
+120ocsr30812240t
+9.
+Which of the following traversal algorithms ensures elements are visited in sorted order for a binary
+search tree?
+a) Pre-order b) Post-order c) In-order d)
+Level-order
+10.
+What is the maximum number of nodes in a binary tree of height h?
+a) 1 b) 1 cl 1 d)
+2^h - 2a(h-1) - 2a(l+1) - 2^h
+11
+ln a multithreaded environment, which of the following is used to avoid race conditions?
+a) Pooling b) Mutex c) paging d)
+Thread Deadlock
+L2
+In a two-leveldirectory structure, which of the following is true?
+a) Files in different b) Files in the same c) Directories d) Each user can only
+can have have
+directories directory can cannot have one file
+same name
+have the the same subdirectories
+name
+13
+A system is said to be in a deadlock state when:
+a) are b) Processes c) is d)
+All processes CPU utilization Processes are in
+blocked waiting 0016
+are ready state
+for resources
+held by each other
+L4
+In a multithreaded program, a thread takes 100 ms for computation and 10 ms for l/O. lf there are 5
+such threads, what is the CPU utilization?
+al 33.3% b) so% c) n.Yo d) Lffi%
+15
+A paging system has a 3-level page table. lf the first, secon4 and third levels occupy 1 KB each, what is
+the minimum memory needed to store the page tables for a process with 2 M8 of virtual memory and 4
+KB page size?
+' a) 2KB b) 4KB c) 5KB d) 8KB
+16
+ln a system with multiple processes, which synchronization mechanism ensures mutual exclusion?
+a) Semaphore b) Paging c) Spooling d)
+deadlock
+t7
+A system has 5 processes and 3 resource typeS with the following allocation and request matrices:
+1l
+' Allocation: [1,0, 21, [0, 1, 0], [1, 3, 51, [1, 0, 01, [0,0, .
+Request: [0,0, 01, [1,0, 2], [1, 1, 0], [0, 0, 2], [1, 0ro1
+Available: [1,1,1]
+. What is the state of the system?
+al Safe b) Unsafe c) Deadlocked d)
+Indeterminate
+18
+Consider a paging system with a page size of 4 KB. How many bits are used for the offset in a 32-bit
+address?
+a) bits b) bits c) bits d)
+10 12 14 15 bits
+19
+What ts the primary purpose of an operating system?
+al To enable direct b) To manage system c) To compile d) To act as a
+control resources programs
+hardware debugger
+Page 2 of 5
+?
+t
+
+--- Page 3 ---
+1200csT308t2240L
+20
+Which of the following is an example of a process scheduling algorithm?
+al Robin b) sort c) DFS d)
+Round Bubble Quick sort
+2I
+A CPU has a clock cycle time of 2 ns and executes a program with 1 billion instructions. The CPI of the
+processor is 1.5. What is the total execution time?
+a) 3s b) ls c) 2s d)
+0.5s
+22
+In a 4-way set associative cache, the total cache size is 54 KB and block size is 16 bytes. What is the
+number of sets in the cache?
+al 2s6 b) Lo24 c) zcp.s d)
+s]^z
+23
+Which of the following addressing modes is used in the instruction MOV AX, [BXI?
+a) Register b) Direct Addressing c) Register Indirect d) lmmediate
+Addressing Addressing
+Addressing
+24
+A computer has 16 GB of MM and a 32-bit virtual address space. lf the page size is 4 K8, what is the
+size of the page table?
+a) 8MB b) 16MB c) 4MB d)
+32MB
+25
+In a pipelined processor, the instruction throughput increases because
+a) instruction b) Multiple c) cycle d)
+Each The clock The instruction
+fewer are reduced
+uses instructions time is set is simplified
+resources
+executed
+simultaneously
+26
+lf a CPU has 4 registers and 32 instructions, how many bits are required for the opcode?
+a) 4 b)5 c) 3 d)
+6
+' 27
+A system has a 32 KB 2-way set associative cache and a block size of 15 bytes. How many cache lines are
+in one set?
+aI to24 b) zoa.s c) 4096 d)
+8192
+28
+A system uses a direct-rnapped cache with 512 blocks and a block size of 32 bytes. What is the size of
+the tag field for a 32-bit memory address?
+; a) bits b) bits c) bits d)
+19 18 17 16bits
+;
+29
+Which memory type is the closest to the CPU Jnd provides fast access to frequently used data?
+a) Cache memory b) Main memory c) Virtualmemory d) Secondary
+(RAM)
+memory (Hard
+Disk)
+30
+Whlch of the following techniques is used to handle branch hazards?
+a) Instruction bl Prediction c) Branch d)
+Branch Delayed Both b and c
+Prefetch
+31
+Which of the following is a key feature of a relational database?
+Page 3 of 5
+r.
+t
+
+--- Page 4 ---
+1200csT308L2240L
+a) as b) in c) in dl
+Data is stored . Data is stored Data is stored Data is stored as
+objects tables format
+the form of XML scripts
+32 ) )
+Given a relation R(A, B, C) with functional dependencies {A B, B C}, which of the following is a
+superkey?
+a) A b)B c)c d)
+AB
+33 query:
+Consider the following SQL
+:
+_ sql
+Copy code
+SELECT COUNT(r')
+FROM Employees
+WHERE Salary > (SETECTAVC(Salary) FROM Etnployees);
+What does thb query compute?
+a) of b) of c) average d)
+The total salary The number The The count of
+employees earning all
+all employees salary of employees with
+average employees
+above the the lowest salary
+salary
+34
+Which SQL command is used to remove a table from a database?
+a) DETETE b) REMOVE c) DROP dl
+ERASE
+35
+Which of the following properties ensures thtt a database transaction ls ompleted or entirely rolled
+back?
+a) Consistency b) Durability cf Atomicity d)
+lsolation
+36
+What is the role of the primary key in a database?
+a) uniquely b) data c) the d)
+To To store large To index To allow duplicate
+record table
+identify a records
+in a table
+37
+A schedule is said to be conflict serializable if:
+a) be b) c) the dl
+lt can lt allows concurrent lt maintains lt ensures no
+a all properties
+transformed into execution of ACID deadlock occrr
+by transactions
+serial schedule of transactions
+swapping non-
+conflicting
+-;
+operations
+38 )
+For a relation R(A, 8, C, D) with candidate keys tA BC), which normal form does it violate if A B and B
+)
+C exist?
+a) INF bl 2NF c) 3NF d)
+BCNF
+39
+Given the following relational algebra query:
+scss
+Copy code
+n_name(o_age > 30(Em ployees))
+What does th's query return?
+Page 4 of 5
+?
+I
+
+--- Page 5 ---
+1200csT308L2240t
+a
+a) All employee b) Names of c) Ages of all d) Names and ages
+names older employees
+employees of employees
+than 30
+40
+Consider a B+ tree with order 4. What is the maximum number of keys that can be stored in a node?
+a) 2 b)3 c) 4 d)
+s
+4t
+The language accepted by Linear Bounded Automaton:
+a) Recursive b) Context free c) Context Sensitive d) All of the
+Language language Language
+mentioned
+42
+The Chomsky hierarchy classifies formal languages into how many levels?
+a) 2 b)3 c) 4 d)
+s
+43 A finite automaton requires minimum number of stacks.
+a) 1 b) O c) 2 d)
+None ofthe
+mentioned
+M
+Regular expression for all strings starts with ab and ends with bba is.
+a) aba*b*bba b) ab(ab)*bba c) ab(a+b)*bba d)
+Ail ofthe
+mentioned
+45
+The Grammar can be defined as: G=(V, L p, Sf . In the given definition, what does s represents?
+a) Accepting State b) Starting Variable c) Sensitive d) None of these
+Grammar
+46
+The closure property of context free grammar includes :
+a) Kleene b) concatenation c) Union d)
+Allof the
+mentioned
+47
+A muhitape turing machine is powerfulthan a single tape turing machine.
+r it) more b) less c) equal d)
+none of the
+mentioned
+48 -
+A turing machine that is able to simulate other turing machines:
+a) Nested Turing b) Universal Turing c) Counter machine d) None of the
+machines machine
+mentioned
+49 Which of the following statements are false?
+r
+i
+a) Every recursive b) Recursively c) Recursive d) None of the
+language is enumerable languages may mentioned
+recursively not
+language may not be recursively
+enumerable recursive
+be enumerable
+50
+lf L is a recursive language, L' is:
+a) Recursive b) Recursively c) and d)
+Recursive None of the
+Enumerable Recursively
+mentioned
+Enumerable
+Page 5 of 5 e
+I
+

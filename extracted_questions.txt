@@ -1,0 +1,111 @@
+
+============================================================
+ PDF: ccw 1.pdf
+============================================================
+ Pages: 6
+
+ Detected Subject: DSA
+ Questions found:  11
+
+  Q002: What is the output of following function for start pointing to first node of following linked
+  Q003: "The prefix form of A-B/ (C * D n E) is? j I
+  Q004: Suppose we are sorting an ruray of eight integers using quicksort, and we have just finished
+  Q009: 9 be
+  Q005: In a complete k-ary tree, every internal node has exactly k children or no child. The
+  Q007: Using Bubble sort, the number of interchanges required to sort S, l, 6,2 and4 in ascending
+  Q008: Which one of the following is a sequence container?
+  Q009: Minimum number of queues needed to implement the priority queue is ...........
+  Q010: The data structure used in breadth first search algorithm is ...........
+  Q002: In auto increment, the operand is retrieved first and then the address altered
+  Q003: Both of them can be used on general purpose registers as well as memory locations
+
+============================================================
+ PDF: ccw2.pdf
+============================================================
+ Pages: 5
+
+ Detected Subject: OS
+ Questions found:  10
+
+  Q001: The prerequisite of the binary search algorithm is
+  Q002: In a binary heap, what is the time complexity of deleting the maximum element?
+  Q003: How many edges does a complete graph with n vertlces have?
+  Q004: The data structure used in breadth first search algorithm is
+  Q005: what is the amortized time complexity of operations in a dynamic array?
+  Q005: In a max-heap with n elements, where are the leaf nodes stored?
+  Q007: A hash table is
+  Q008: In a circular queue implemented with an arftly, how do you determine if the queue is full?
+  Q009: Which of the following traversal algorithms ensures elements are visited in sorted order for a binary
+  Q010: What is the maximum number of nodes in a binary tree of height h?
+
+============================================================
+ PDF: ccw3.pdf
+============================================================
+ Pages: 6
+
+ Detected Subject: OS
+ Questions found:  8
+
+  Q002: When a pop0 operation is called on an empty queue, what is the condition called?
+  Q004: Which sorting algorithm has a time complexity of O(n log n) in the average and worst case?
+  Q005: Which of the following statements about a linked list is true?
+  Q006: Which type of linked list has its last node pointing to the first node?
+  Q007: Travelling salesman problem is an example of
+  Q008: Time complexity of Depth First Traversalof is
+  Q009: Visiting root node after visiting left and right sub-trees is called
+  Q010: How is the 2nd element in an array accessed based on pointer notation?
+
+============================================================
+ PDF: ccw4.pdf
+============================================================
+ Pages: 6
+
+ Detected Subject: OS
+ Questions found:  5
+
+  Q002: Dirty bit is used to indicate which of the following?
+  Q003: What is a short-term scheduler?
+  Q004: If a process fails, most operating system write the error information to a
+  Q005: If a pr6cess is executing in its criiical section, then no other processes can be executing in their
+  Q006: when are the register context and stack of thread dealrocated?
+
+============================================================
+ PDF: ccw5.pdf
+============================================================
+ Pages: 7
+
+ Detected Subject: OS
+ Questions found:  7
+
+  Q002: Which of the following is not the application of stack?
+  Q003: In the worst case, the number of comparisons needed to search a singly linked list of length n for a
+  Q004: To implement a stack using queue (with only enqueue and dequeue operations), how many queues
+  Q005: The optimal data structure used to solve Tower of Hanoi is
+  Q006: Assume that the operators *, -, X are left associative and ^ is right associative. The order of
+  Q007: The time complexity of heap sort in worst case is
+  Q009: what is the number of edges present in a complete graph having n vertices?
+
+============================================================
+ PDF: ccw6.pdf
+============================================================
+ Pages: 7
+
+ Detected Subject: DSA
+ Questions found:  9
+
+  Q002: Thepostordertraversalofabinarytreeis 8,g,6,7,4,5,2,3,l.Theinordertraversalofthesame
+  Q003: What can be said about the array representation of a circular queue when it contains only one
+  Q004: + A* - BCD is a prefix expression. If A, B, C, D have value 5,4,2,3 respectively the expression
+  Q005: The Breadth First Search (BFS) algorithm has been implemented using the queue data structure.
+  Q006: Which of the following can be the sequence of nodes examined in binary search tree while
+  Q007: The data structure that i$used to implement recursion is
+  Q008: If we want to find the last node of a linked list, then the correct coding is
+  Q009: A hashing firnction which stores colliding items together in linked lists is:
+  Q010: For merging two sorted lists of size m and n into a sorted listbof size m*n' we required
+
+============================================================
+ SUMMARY
+============================================================
+ DSA       :  20 questions extracted
+ OS        :  30 questions extracted
+ TOTAL     :  50 questions extracted across all PDFs
