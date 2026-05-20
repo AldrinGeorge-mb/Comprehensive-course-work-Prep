@@ -1,39 +1,343 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
   body {
-    @apply font-sans bg-bg-primary text-text-primary min-h-screen overflow-x-hidden leading-relaxed;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #0a0a1a;
+    color: #f1f5f9;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
   }
+
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+    background:
+      radial-gradient(ellipse at 15% 50%, rgba(99,102,241,0.10) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 15%, rgba(139,92,246,0.08) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 85%, rgba(16,185,129,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 60% 40%, rgba(244,63,94,0.04) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
   }
 }
 
-@layer utilities {
+@layer components {
+  /* ── Glass Card ── */
   .glass-card {
-    @apply bg-bg-card backdrop-blur-md border border-border-card rounded-2xl transition-all duration-500 ease-in-out relative overflow-hidden;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1),
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
   }
   .glass-card:hover {
-    @apply -translate-y-1 border-border-glow shadow-glow;
+    transform: translateY(-3px);
+    border-color: rgba(99,102,241,0.35);
+    box-shadow: 0 0 35px rgba(99,102,241,0.12), 0 20px 60px rgba(0,0,0,0.45);
   }
-  
-  .glass-btn {
-    @apply bg-white/5 border border-white/10 rounded-xl cursor-pointer transition-all duration-300;
+
+  /* ── Pill Badge ── */
+  .badge-pill {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: rgba(99,102,241,0.12);
+    color: #a5b4fc;
+    border: 1px solid rgba(99,102,241,0.2);
   }
-  .glass-btn:hover {
-    @apply bg-white/10 text-white border-transparent shadow-lg;
+
+  /* ── Mode Button (10Qs / 30Qs / All 50) ── */
+  .mode-btn {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    color: #94a3b8;
+    padding: 8px 0;
+    border-radius: 10px;
+    font-size: 0.73rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+    text-align: center;
   }
-  
+  .mode-btn:hover {
+    background: rgba(99,102,241,0.15);
+    color: #e0e7ff;
+    border-color: rgba(99,102,241,0.3);
+    transform: translateY(-1px);
+  }
+
+  /* ── Option Button states ── */
+  .option-btn {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px 18px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.92rem;
+    font-family: inherit;
+    color: #f1f5f9;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+  }
+  .option-btn:hover:not(.opt-locked) {
+    background: rgba(99,102,241,0.07);
+    border-color: rgba(99,102,241,0.28);
+    transform: translateX(2px);
+  }
+  .option-btn.opt-selected {
+    border-color: #6366f1;
+    background: rgba(99,102,241,0.10);
+    box-shadow: 0 0 22px rgba(99,102,241,0.12), inset 0 0 0 1px rgba(99,102,241,0.15);
+  }
+  .option-btn.opt-correct {
+    border-color: #10b981 !important;
+    background: rgba(16,185,129,0.10) !important;
+    box-shadow: 0 0 22px rgba(16,185,129,0.18) !important;
+  }
+  .option-btn.opt-wrong {
+    border-color: #f43f5e !important;
+    background: rgba(244,63,94,0.10) !important;
+    box-shadow: 0 0 22px rgba(244,63,94,0.18) !important;
+  }
+  .option-btn.opt-locked {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* ── Option Letter Badge ── */
+  .opt-letter {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.06);
+    color: #64748b;
+    transition: all 0.25s ease;
+  }
+  .option-btn.opt-selected .opt-letter { background: #6366f1; color: #fff; }
+  .option-btn.opt-correct .opt-letter  { background: #10b981; color: #fff; }
+  .option-btn.opt-wrong .opt-letter    { background: #f43f5e; color: #fff; }
+
+  /* ── Action Buttons ── */
+  .btn-primary {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 13px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+    background: linear-gradient(135deg, #6366f1, #7c3aed);
+    box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+  }
+  .btn-primary:hover:not(:disabled) {
+    box-shadow: 0 8px 35px rgba(99,102,241,0.5);
+    transform: translateY(-2px);
+  }
+  .btn-primary:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  .btn-success {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 13px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 4px 20px rgba(16,185,129,0.3);
+  }
+  .btn-success:hover {
+    box-shadow: 0 8px 35px rgba(16,185,129,0.5);
+    transform: translateY(-2px);
+  }
+  .btn-home {
+    width: 100%;
+    display: block;
+    padding: 15px 32px;
+    border: none;
+    border-radius: 13px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+    background: linear-gradient(135deg, #6366f1, #7c3aed);
+    box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+    text-align: center;
+  }
+  .btn-home:hover {
+    box-shadow: 0 8px 35px rgba(99,102,241,0.5);
+    transform: translateY(-2px);
+  }
+  .btn-back {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #94a3b8;
+    padding: 9px 18px;
+    border-radius: 11px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-family: inherit;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-back:hover { background: rgba(255,255,255,0.10); color: #f1f5f9; }
+
+  /* ── Progress Bar ── */
+  .progress-track {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 10px rgba(139,92,246,0.4);
+  }
+
+  /* ── Explanation Box ── */
+  .explanation-box {
+    margin-top: 16px;
+    padding: 18px 22px;
+    border-radius: 14px;
+    background: rgba(99,102,241,0.07);
+    border: 1px solid rgba(99,102,241,0.15);
+    font-size: 0.88rem;
+    color: #c7d2fe;
+    line-height: 1.7;
+  }
+
+  /* ── Score Circle ── */
+  .score-ring {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 30px auto;
+    position: relative;
+  }
+  .score-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    padding: 4px;
+    background: conic-gradient(var(--ring-color,#6366f1) var(--ring-deg,0deg), rgba(255,255,255,0.05) 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: --ring-deg 0.8s ease;
+  }
+
+  /* ── Text Gradient ── */
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-400;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-rose {
+    background: linear-gradient(135deg, #f43f5e, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Pulse Dot ── */
+  .pulse-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #f43f5e;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(244,63,94,0.4);
+    animation: ping 2s cubic-bezier(0,0,0.2,1) infinite;
   }
 }
+
+/* ── Keyframes ── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ping {
+  0%   { transform: scale(1);   opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.anim-fade-up   { animation: fadeSlideUp 0.45s cubic-bezier(0.4,0,0.2,1) both; }
+.anim-fade-in   { animation: fadeIn 0.4s ease both; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.45); }

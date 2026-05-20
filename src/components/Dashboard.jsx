@@ -2,108 +2,187 @@ import React from 'react';
 import { SUBJECTS } from '../data/questions';
 
 export default function Dashboard({ startQuiz, startReview }) {
-  
+
+  const subjectColors = ['#6366f1', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b'];
+
   const handleMixedExam = () => {
     const subjectNames = ['DSA', 'OS', 'COA', 'DBMS', 'FLAT'];
-    const subjectColors = ['#6366f1', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b'];
-    
     let mixedQuestions = [];
     SUBJECTS.forEach((s, i) => {
-      // Pick 10 random from each
       const pool = [...s.questions].sort(() => Math.random() - 0.5).slice(0, 10);
       pool.forEach(q => {
-        q._subjectTag = subjectNames[i];
+        q._subjectTag   = subjectNames[i];
         q._subjectColor = subjectColors[i];
       });
       mixedQuestions.push(...pool);
     });
-
-    startQuiz({ 
-      id: 'mixed', 
-      name: 'Mixed Exam Mode', 
-      icon: '📝', 
-      color: '#f43f5e', 
-      questions: mixedQuestions 
-    }, 50, true);
+    startQuiz(
+      { id: 'mixed', name: 'Mixed Exam Mode', icon: '📝', color: '#f43f5e', questions: mixedQuestions },
+      50, true
+    );
   };
 
   return (
-    <div id="dashboard-view">
-      <div className="text-center py-10 pb-5">
-        <h1 className="text-3xl md:text-5xl font-black text-gradient tracking-tight">
-          KTU S6 CCW Master Dashboard
+    <div className="anim-fade-up">
+
+      {/* ── Header ── */}
+      <header className="text-center py-10 pb-6">
+        <h1
+          className="text-gradient font-black tracking-tight"
+          style={{ fontSize: 'clamp(1.8rem,4.5vw,2.9rem)', letterSpacing: '-0.02em' }}
+        >
+          KTU S6 CCW Master
         </h1>
-        <p className="text-text-secondary text-sm md:text-base mt-2 font-normal">
+        <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginTop: '8px' }}>
           Comprehensive Course Work — Exam Preparation
         </p>
-        <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-indigo-500/15 text-indigo-300 border border-indigo-500/20 mt-3">
-          300 Questions • 5 Subjects
-        </span>
-      </div>
+        <div style={{ marginTop: '14px' }}>
+          <span className="badge-pill">300 Questions · 5 Subjects</span>
+        </div>
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
+      {/* ── Subject Grid ── */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: '18px',
+          marginTop: '10px',
+        }}
+      >
         {SUBJECTS.map((s, idx) => (
-          <div key={s.id} className="glass-card p-6 flex flex-col group cursor-pointer" style={{'--card-accent': `${s.color}22`}}>
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                 style={{ background: `linear-gradient(135deg, ${s.color}22, transparent 60%)`}}></div>
-            
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4 relative z-10" 
-                 style={{ backgroundColor: `${s.color}22`, color: s.color }}>
+          <div
+            key={s.id}
+            className="glass-card"
+            style={{ padding: '26px 22px' }}
+          >
+            {/* Gradient accent overlay */}
+            <div
+              style={{
+                position: 'absolute', inset: 0,
+                background: `linear-gradient(135deg, ${s.color}18, transparent 65%)`,
+                borderRadius: '18px',
+                pointerEvents: 'none',
+                opacity: 0,
+                transition: 'opacity 0.35s',
+              }}
+              className="card-overlay"
+            />
+
+            {/* Icon */}
+            <div
+              style={{
+                width: 50, height: 50, borderRadius: 13,
+                background: `${s.color}20`,
+                color: s.color,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '1.45rem',
+                marginBottom: 16,
+                position: 'relative', zIndex: 1,
+              }}
+            >
               {s.icon}
             </div>
-            
-            <div className="text-lg font-bold mb-1.5 relative z-10">{s.name}</div>
-            <div className="text-xs text-text-muted relative z-10 flex-grow">{s.desc}</div>
-            
-            <div className="flex items-center gap-2 mt-4 mb-4 relative z-10">
-              <span className="text-[0.7rem] text-text-secondary bg-white/5 px-2.5 py-1 rounded-lg">50 Questions Total</span>
-              <span className="text-[0.7rem] text-text-secondary bg-white/5 px-2.5 py-1 rounded-lg">MCQ</span>
+
+            <div style={{ fontWeight: 700, fontSize: '1.05rem', marginBottom: 5, position: 'relative', zIndex: 1 }}>
+              {s.name}
             </div>
-            
-            <div className="flex gap-2 relative z-10">
-              <button className="glass-btn flex-1 py-2 text-xs font-semibold text-text-secondary" onClick={() => startQuiz(s, 10)}>10 Qs</button>
-              <button className="glass-btn flex-1 py-2 text-xs font-semibold text-text-secondary" onClick={() => startQuiz(s, 30)}>30 Qs</button>
-              <button className="glass-btn flex-1 py-2 text-xs font-semibold text-text-secondary" onClick={() => startQuiz(s, 50)}>All 50</button>
+            <div style={{ fontSize: '0.78rem', color: '#64748b', position: 'relative', zIndex: 1 }}>
+              {s.desc}
+            </div>
+
+            {/* Meta chips */}
+            <div style={{ display: 'flex', gap: 8, marginTop: 14, marginBottom: 16, position: 'relative', zIndex: 1 }}>
+              <span style={{ fontSize: '0.68rem', color: '#94a3b8', background: 'rgba(255,255,255,0.05)', padding: '3px 10px', borderRadius: 8 }}>
+                {s.questions.length} Questions
+              </span>
+              <span style={{ fontSize: '0.68rem', color: '#94a3b8', background: 'rgba(255,255,255,0.05)', padding: '3px 10px', borderRadius: 8 }}>
+                MCQ
+              </span>
+            </div>
+
+            {/* Mode buttons */}
+            <div style={{ display: 'flex', gap: 8, position: 'relative', zIndex: 1 }}>
+              <button className="mode-btn" onClick={() => startQuiz(s, 10)}>10 Qs</button>
+              <button className="mode-btn" onClick={() => startQuiz(s, 30)}>30 Qs</button>
+              <button className="mode-btn" onClick={() => startQuiz(s, s.questions.length)}>All {s.questions.length}</button>
             </div>
           </div>
         ))}
+      </div>
 
-        {/* Mixed Exam Card */}
-        <div 
-          onClick={handleMixedExam}
-          className="col-span-1 md:col-span-2 lg:col-span-3 bg-gradient-to-br from-indigo-500/10 to-rose-500/10 backdrop-blur-md border border-rose-500/20 rounded-2xl p-6 cursor-pointer transition-all duration-500 relative overflow-hidden group hover:-translate-y-1 hover:border-rose-500/40 hover:shadow-[0_0_30px_rgba(244,63,94,0.15)] mt-2">
-          
-          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/10 via-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          
-          <div className="flex flex-col md:flex-row items-center gap-5 relative z-10 text-center md:text-left">
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl shrink-0 bg-gradient-to-br from-rose-500/20 to-indigo-500/20">
-              📝
+      {/* ── Mixed Exam Card ── */}
+      <div
+        onClick={handleMixedExam}
+        style={{
+          marginTop: 18,
+          background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(244,63,94,0.07))',
+          backdropFilter: 'blur(24px)',
+          border: '1px solid rgba(244,63,94,0.18)',
+          borderRadius: 18,
+          padding: '26px 24px',
+          cursor: 'pointer',
+          position: 'relative',
+          overflow: 'hidden',
+          transition: 'transform 0.35s cubic-bezier(0.4,0,0.2,1), border-color 0.35s, box-shadow 0.35s',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.transform = 'translateY(-4px)';
+          e.currentTarget.style.borderColor = 'rgba(244,63,94,0.45)';
+          e.currentTarget.style.boxShadow = '0 0 40px rgba(244,63,94,0.15), 0 20px 60px rgba(0,0,0,0.4)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.transform = '';
+          e.currentTarget.style.borderColor = 'rgba(244,63,94,0.18)';
+          e.currentTarget.style.boxShadow = '';
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
+          <div
+            style={{
+              width: 58, height: 58, borderRadius: 15,
+              background: 'linear-gradient(135deg, rgba(244,63,94,0.22), rgba(99,102,241,0.22))',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '1.7rem', flexShrink: 0,
+            }}
+          >
+            📝
+          </div>
+
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <div className="text-gradient-rose" style={{ fontSize: '1.12rem', fontWeight: 800, marginBottom: 4 }}>
+              Mixed Exam Mode
             </div>
-            <div className="flex-1">
-              <div className="text-lg font-bold mb-1 bg-clip-text text-transparent bg-gradient-to-br from-rose-400 to-indigo-500">
-                Mixed Exam Mode
-              </div>
-              <div className="text-xs text-text-muted">
-                Simulates the actual CCW exam — 50 random questions, 10 from each subject. Different every time.
-              </div>
-              <div className="flex flex-wrap justify-center md:justify-start gap-1.5 mt-2.5">
-                {['🔗 DSA', '⚙️ OS', '🖥️ COA', '🗄️ DBMS', '🤖 FLAT'].map(tag => (
-                  <span key={tag} className="text-[0.65rem] px-2 py-0.5 rounded-md font-semibold bg-white/5 text-text-secondary">
-                    {tag} ×10
-                  </span>
-                ))}
-              </div>
+            <div style={{ fontSize: '0.8rem', color: '#64748b', lineHeight: 1.5 }}>
+              Simulates the actual CCW exam — 50 random questions, 10 from each subject. Different every time.
             </div>
-            <div className="relative w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0 hidden md:block">
-              <div className="absolute -inset-1 rounded-full border-2 border-rose-500/40 animate-ping"></div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 10 }}>
+              {['🔗 DSA ×10', '⚙️ OS ×10', '🖥️ COA ×10', '🗄️ DBMS ×10', '🤖 FLAT ×10'].map(tag => (
+                <span key={tag} style={{ fontSize: '0.63rem', padding: '3px 9px', borderRadius: 7, background: 'rgba(255,255,255,0.05)', color: '#94a3b8', fontWeight: 600 }}>
+                  {tag}
+                </span>
+              ))}
             </div>
           </div>
+
+          <div className="pulse-dot" style={{ display: 'none' }} />
         </div>
       </div>
-      
-      <div className="mt-8 text-center">
-        <button onClick={startReview} className="text-sm text-text-secondary underline hover:text-white transition-colors">
-          Master Database Review Mode
+
+      {/* ── Review Link ── */}
+      <div style={{ textAlign: 'center', marginTop: 28, marginBottom: 8 }}>
+        <button
+          onClick={startReview}
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: '#64748b', fontSize: '0.82rem', textDecoration: 'underline',
+            transition: 'color 0.2s',
+            fontFamily: 'inherit',
+          }}
+          onMouseEnter={e => e.target.style.color = '#f1f5f9'}
+          onMouseLeave={e => e.target.style.color = '#64748b'}
+        >
+          📚 View Master Database (All Questions)
         </button>
       </div>
     </div>

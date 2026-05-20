@@ -1,88 +1,117 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 export default function ResultsView({ subject, totalQ, userAnswers, mistakes, goHome }) {
-  const score = userAnswers.filter(a => a.correct).length;
-  const wrong = totalQ - score;
-  const pct = (score / totalQ) * 100;
-  
-  const [animatedScore, setAnimatedScore] = useState(0);
-  const [animatedDeg, setAnimatedDeg] = useState(0);
+  const score  = userAnswers.filter(a => a.correct).length;
+  const wrong  = totalQ - score;
+  const pct    = totalQ > 0 ? (score / totalQ) * 100 : 0;
+  const color  = pct >= 70 ? '#10b981' : pct >= 40 ? '#f59e0b' : '#f43f5e';
 
-  const color = pct >= 70 ? '#10b981' : pct >= 40 ? '#f59e0b' : '#f43f5e';
+  const [displayScore, setDisplayScore] = useState(0);
+  const [ringDeg, setRingDeg]           = useState(0);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Animate the circle
-    setTimeout(() => {
-      setAnimatedDeg((pct / 100) * 360);
-    }, 100);
 
-    // Animate the number
+    // Animate ring
+    const targetDeg = (pct / 100) * 360;
+    setTimeout(() => setRingDeg(targetDeg), 120);
+
+    // Animate counter
+    if (score === 0) return;
     let count = 0;
-    const interval = setInterval(() => {
-      if (score === 0) {
-        clearInterval(interval);
-        return;
-      }
+    intervalRef.current = setInterval(() => {
       count++;
-      setAnimatedScore(count);
-      if (count >= score) clearInterval(interval);
-    }, 30);
+      setDisplayScore(count);
+      if (count >= score) clearInterval(intervalRef.current);
+    }, Math.max(20, 600 / score));
 
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalRef.current);
   }, [score, pct]);
 
+  const emoji = pct >= 70 ? '🎉' : pct >= 40 ? '📈' : '💪';
+  const label = pct >= 70 ? 'Great work!' : pct >= 40 ? 'Keep going!' : 'Keep practicing!';
+
   return (
-    <div id="results-view" className="animate-[fadeIn_0.5s_ease]">
-      <div className="text-center py-10 pb-5">
-        <h1 className="text-2xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-indigo-500 to-purple-500">
+    <div className="anim-fade-up">
+
+      {/* Header */}
+      <div style={{ textAlign: 'center', padding: '36px 0 10px' }}>
+        <h1 className="text-gradient font-black" style={{ fontSize: 'clamp(1.4rem,3.5vw,2.2rem)', marginBottom: 6 }}>
           {subject?.name}
         </h1>
-        <p className="text-text-secondary mt-2">Quiz Complete</p>
+        <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Quiz Complete</p>
       </div>
 
-      <div 
-        className="w-44 h-44 rounded-full flex flex-col items-center justify-center mx-auto my-8 relative"
+      {/* Score Ring */}
+      <div
+        className="score-ring"
         style={{
-          '--score-color': color,
-          '--score-deg': `${animatedDeg}deg`,
+          '--ring-color': color,
+          '--ring-deg': `${ringDeg}deg`,
         }}
       >
-        {/* CSS Trick for the conic gradient border using a pseudo element equivalent in plain div */}
-        <div className="absolute -inset-1 rounded-full p-1" style={{
-          background: `conic-gradient(var(--score-color) var(--score-deg), rgba(255,255,255,0.06) 0)`,
-          WebkitMask: `linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)`,
-          WebkitMaskComposite: 'xor',
-          maskComposite: 'exclude'
-        }}></div>
-        
-        <div className="text-5xl font-black leading-none" style={{ color: color }}>
-          {animatedScore}
-        </div>
-        <div className="text-xs text-text-muted mt-1">out of {totalQ}</div>
+        <div style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1, color }}>{displayScore}</div>
+        <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 4 }}>out of {totalQ}</div>
       </div>
 
-      <div className="flex gap-3 justify-center mt-4 flex-wrap">
-        <span className="px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 border border-emerald-500/20 text-accent-emerald">
+      {/* Grade label */}
+      <div style={{ textAlign: 'center', marginBottom: 20 }}>
+        <span style={{ fontSize: '1.1rem' }}>{emoji}</span>
+        <span style={{ fontSize: '0.9rem', color: '#94a3b8', marginLeft: 8 }}>{label}</span>
+      </div>
+
+      {/* Stats chips */}
+      <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 24 }}>
+        <span style={{
+          padding: '8px 18px', borderRadius: 11, fontSize: '0.78rem', fontWeight: 700,
+          background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.22)', color: '#10b981',
+        }}>
           ✓ {score} Correct
         </span>
-        <span className="px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 border border-rose-500/20 text-accent-rose">
+        <span style={{
+          padding: '8px 18px', borderRadius: 11, fontSize: '0.78rem', fontWeight: 700,
+          background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.22)', color: '#f43f5e',
+        }}>
           ✗ {wrong} Wrong
+        </span>
+        <span style={{
+          padding: '8px 18px', borderRadius: 11, fontSize: '0.78rem', fontWeight: 700,
+          background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.22)', color: '#f59e0b',
+        }}>
+          📊 {Math.round(pct)}%
         </span>
       </div>
 
+      {/* Mistakes card */}
       {mistakes.length > 0 && (
-        <div className="glass-card p-6 md:p-8 mt-6">
-          <div className="text-lg font-bold mb-4 flex items-center gap-2">📋 Mistakes Review</div>
+        <div
+          className="glass-card"
+          style={{ padding: '26px 28px', marginBottom: 20 }}
+        >
+          <div style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: 18, display: 'flex', alignItems: 'center', gap: 8 }}>
+            📋 <span>Mistakes Review</span>
+            <span style={{ fontSize: '0.72rem', padding: '2px 10px', borderRadius: 8, background: 'rgba(244,63,94,0.12)', color: '#f43f5e', fontWeight: 600, marginLeft: 4 }}>
+              {mistakes.length} wrong
+            </span>
+          </div>
           <div>
             {mistakes.map((m, i) => (
-              <div key={i} className={`py-4 ${i !== mistakes.length - 1 ? 'border-b border-white/5' : ''}`}>
-                <div className="text-sm font-medium mb-2 text-text-primary">{i + 1}. {m.q}</div>
-                <div className="text-xs flex flex-col gap-1">
-                  <span className="text-accent-rose">Your answer: {m.yourAns}</span>
-                  <span className="text-accent-emerald">Correct answer: {m.correctAns}</span>
-                  <span className="text-text-muted italic mt-1">{m.exp}</span>
+              <div
+                key={i}
+                style={{
+                  padding: '16px 0',
+                  borderBottom: i !== mistakes.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                }}
+              >
+                <div
+                  style={{ fontSize: '0.88rem', fontWeight: 600, marginBottom: 10, color: '#f1f5f9', lineHeight: 1.55 }}
+                  dangerouslySetInnerHTML={{ __html: `${i + 1}. ${m.q}` }}
+                />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span style={{ fontSize: '0.78rem', color: '#f43f5e' }}>✗ Your answer: {m.yourAns}</span>
+                  <span style={{ fontSize: '0.78rem', color: '#10b981' }}>✓ Correct: {m.correctAns}</span>
+                  <span style={{ fontSize: '0.76rem', color: '#64748b', fontStyle: 'italic', marginTop: 4 }}>{m.exp}</span>
                 </div>
               </div>
             ))}
@@ -90,12 +119,14 @@ export default function ResultsView({ subject, totalQ, userAnswers, mistakes, go
         </div>
       )}
 
-      <button 
-        onClick={goHome}
-        className="block w-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white border-none py-3.5 px-8 rounded-xl text-sm font-semibold mt-6 cursor-pointer transition-all duration-300 shadow-[0_4px_20px_rgba(99,102,241,0.3)] hover:shadow-[0_6px_30px_rgba(99,102,241,0.45)] hover:-translate-y-px"
-      >
-        Return to Dashboard
-      </button>
+      {mistakes.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '20px', marginBottom: 20 }}>
+          <div style={{ fontSize: '2.5rem' }}>🎯</div>
+          <div style={{ color: '#10b981', fontWeight: 700, marginTop: 8 }}>Perfect Score! No mistakes.</div>
+        </div>
+      )}
+
+      <button className="btn-home" onClick={goHome}>← Return to Dashboard</button>
     </div>
   );
 }
